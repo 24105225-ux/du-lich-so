@@ -1,0 +1,38 @@
+# --- PHP / Laravel ---
+/backend/vendor/
+/backend/storage/*.key
+/backend/storage/logs/*.log
+/backend/storage/framework/cache/*
+/backend/public/storage
+/backend/public/hot
+
+# --- Node / Vue ---
+/frontend/node_modules/
+/frontend/dist/
+
+# --- Python ---
+/python-service/.venv/
+__pycache__/
+*.pyc
+
+# --- Bí mật và cấu hình cục bộ ---
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+auth.json
+
+# --- Hệ điều hành và trình soạn thảo ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+/.vscode/*
+!/.vscode/extensions.json
+
+# --- Dữ liệu lớn và kết xuất ---
+/database/backup/*.sql
+/database/raw/*.csv
+*.zip
+*.mp4
