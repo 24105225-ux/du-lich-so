@@ -110,3 +110,7 @@ du-lich-so/
 Toàn bộ dữ liệu học sinh sử dụng trong hệ thống là dữ liệu mô phỏng.
 
 Không sử dụng dữ liệu học sinh thật.
+
+## 11. Git Workflow
+
+![Git Workflow](docs/git-workflow.png)
