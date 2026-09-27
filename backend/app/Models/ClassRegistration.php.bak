@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class ClassRegistration extends Model
+{
+    protected $table = 'class_registrations';
+
+    protected $fillable = [
+        'class_id',
+        'program_schedule_id',
+        'student_count',
+        'status',
+        'note',
+    ];
+
+    protected $casts = [
+        'student_count' => 'integer',
+    ];
+
+    public function schoolClass(): BelongsTo
+    {
+        return $this->belongsTo(
+            SchoolClass::class,
+            'class_id'
+        );
+    }
+
+    public function schedule(): BelongsTo
+    {
+        return $this->belongsTo(
+            ProgramSchedule::class,
+            'program_schedule_id'
+        );
+    }
+}

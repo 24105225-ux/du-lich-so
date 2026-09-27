@@ -1,0 +1,135 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\ClassRegistration;
+use App\Models\ProgramSchedule;
+use App\Models\SchoolClass;
+use Illuminate\Support\Facades\DB;
+use RuntimeException;
+
+class ClassRegistrationService
+{
+    public function formData(): array
+    {
+        $classes = SchoolClass::query()
+            ->with('school:id,name')
+            ->withCount('students')
+            ->orderBy('school_id')
+            ->orderBy('class_name')
+            ->get();
+
+        $schedules = ProgramSchedule::query()
+            ->with('program:id,name')
+            ->where('status', 'open')
+            ->whereDate('trip_date', '>=', today())
+            ->orderBy('trip_date')
+            ->orderBy('start_time')
+            ->get();
+
+        return [
+            'classes' => $classes,
+            'schedules' => $schedules,
+        ];
+    }
+
+    public function register(
+        int $classId,
+        int $scheduleId,
+        int $studentCount
+    ): ClassRegistration {
+        return DB::transaction(function () use (
+            $classId,
+            $scheduleId,
+            $studentCount
+        ) {
+            $schedule = ProgramSchedule::query()
+                ->whereKey($scheduleId)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $schoolClass = SchoolClass::query()
+                ->whereKey($classId)
+                ->firstOrFail();
+
+            /*
+             * 1. Lịch phải đang mở đăng ký.
+             */
+            if ($schedule->status !== 'open') {
+                throw new RuntimeException(
+                    'Chuong trinh hien khong mo dang ky.'
+                );
+            }
+
+            /*
+             * 2. Số học sinh phải >= 1.
+             */
+            if ($studentCount < 1) {
+                throw new RuntimeException(
+                    'So hoc sinh dang ky phai tu 1 tro len.'
+                );
+            }
+
+            /*
+             * 3. Kiểm tra lớp đã đăng ký lịch này chưa.
+             */
+            $duplicate = ClassRegistration::query()
+                ->where('class_id', $schoolClass->id)
+                ->where('schedule_id', $schedule->id)
+                ->whereIn('status', ['pending', 'approved'])
+                ->exists();
+
+            if ($duplicate) {
+                throw new RuntimeException(
+                    'Lop nay da dang ky chuong trinh nay.'
+                );
+            }
+
+            /*
+             * 4. Tính số chỗ đã được sử dụng của lịch.
+             */
+            $usedSeats = ClassRegistration::query()
+                ->where('schedule_id', $schedule->id)
+                ->whereIn('status', ['pending', 'approved'])
+                ->sum('student_count');
+
+            /*
+             * 5. Số chỗ còn lại của lịch.
+             *
+             * QUAN TRỌNG:
+             * Không còn dùng COUNT(students) của lớp làm
+             * giới hạn đăng ký.
+             *
+             * Giới hạn lấy trực tiếp từ:
+             * program_schedules.capacity
+             */
+            $capacity = (int) $schedule->capacity;
+            $remainingSeats = $capacity - (int) $usedSeats;
+
+            if ($remainingSeats < 1) {
+                throw new RuntimeException(
+                    "Lich nay da het cho ({$capacity} cho)."
+                );
+            }
+
+            /*
+             * 6. Không được đăng ký vượt số chỗ còn lại.
+             */
+            if ($studentCount > $remainingSeats) {
+                throw new RuntimeException(
+                    "So hoc sinh dang ky khong duoc vuot qua so cho con lai ({$remainingSeats} cho)."
+                );
+            }
+
+            /*
+             * 7. Tạo đăng ký.
+             */
+            return ClassRegistration::create([
+                'class_id' => $schoolClass->id,
+                'schedule_id' => $schedule->id,
+                'student_count' => $studentCount,
+                'status' => 'pending',
+            ]);
+        });
+    }
+}

@@ -1,0 +1,119 @@
+﻿<?php
+
+namespace App\Services;
+
+use App\Models\ClassRegistration;
+use App\Models\ProgramSchedule;
+use App\Models\SchoolClass;
+use Illuminate\Support\Facades\DB;
+use RuntimeException;
+
+class ClassRegistrationService
+{
+    public function formData(): array
+    {
+        $classes = SchoolClass::query()
+            ->with('school:id,name')
+            ->withCount('students')
+            ->orderBy('school_id')
+            ->orderBy('class_name')
+            ->get();
+
+        $schedules = ProgramSchedule::query()
+            ->with('program:id,name')
+            ->where('status', 'open')
+            ->whereDate('trip_date', '>=', today())
+            ->orderBy('trip_date')
+            ->orderBy('start_time')
+            ->get();
+
+        return [
+            'classes' => $classes,
+            'schedules' => $schedules,
+        ];
+    }
+
+    public function register(
+        int $classId,
+        int $scheduleId,
+        int $studentCount
+    ): ClassRegistration {
+        return DB::transaction(function () use (
+            $classId,
+            $scheduleId,
+            $studentCount
+        ) {
+            $schedule = ProgramSchedule::query()
+                ->whereKey($scheduleId)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $schoolClass = SchoolClass::query()
+                ->whereKey($classId)
+                ->firstOrFail();
+
+            /*
+             * 1. Lịch trình phải đang mở đăng ký.
+             */
+            if ($schedule->status !== 'open') {
+                throw new RuntimeException(
+                    'Lịch trình hiện không mở đăng ký.'
+                );
+            }
+
+            /*
+             * 2. Số học sinh phải >= 1.
+             */
+            if ($studentCount < 1) {
+                throw new RuntimeException(
+                    'Số học sinh đăng ký phải từ 1 trở lên.'
+                );
+            }
+
+            /*
+             * 3. Kiểm tra lớp đã đăng ký lịch này chưa.
+             */
+            $duplicate = ClassRegistration::query()
+                ->where('class_id', $schoolClass->id)
+                ->where('schedule_id', $schedule->id)
+                ->whereIn('status', ['pending', 'approved'])
+                ->exists();
+
+            if ($duplicate) {
+                throw new RuntimeException(
+                    'Lớp này đã đăng ký lịch trình này.'
+                );
+            }
+
+            /*
+             * 4. 20/25 chỗ là giới hạn cho MỖI LỚP
+             *    trong lịch trình.
+             *
+             *    Ví dụ:
+             *    - Lịch trình 20 chỗ
+             *    - Lớp A đăng ký 20 HS  -> OK
+             *    - Lớp B đăng ký 20 HS  -> OK
+             *    - Lớp C đăng ký 20 HS  -> OK
+             *
+             *    Không cộng student_count của các lớp khác.
+             */
+            $capacity = (int) $schedule->capacity;
+
+            if ($studentCount > $capacity) {
+                throw new RuntimeException(
+                    "Số học sinh đăng ký không được vượt quá sức chứa của lịch trình ({$capacity} chỗ)."
+                );
+            }
+
+            /*
+             * 5. Tạo đăng ký.
+             */
+            return ClassRegistration::create([
+                'class_id' => $schoolClass->id,
+                'schedule_id' => $schedule->id,
+                'student_count' => $studentCount,
+                'status' => 'pending',
+            ]);
+        });
+    }
+}

@@ -1,0 +1,286 @@
+erDiagram
+    USERS {
+        bigint id PK
+        varchar email UK
+        varchar password_hash
+        enum role
+        enum status
+        datetime last_login_at
+        timestamp created_at
+    }
+
+    AUDIT_LOGS {
+        bigint id PK
+        bigint actor_id FK
+        varchar action
+        varchar entity
+        bigint entity_id
+        text before_json
+        text after_json
+        varchar ip_address
+        timestamp created_at
+    }
+
+    SCHOOLS {
+        bigint id PK
+        bigint user_id FK
+        varchar name
+        varchar province
+        varchar address
+        enum status
+        timestamp created_at
+    }
+
+    ORGANIZERS {
+        bigint id PK
+        bigint user_id FK
+        varchar name
+        varchar license_code
+        varchar province
+        enum status
+        timestamp created_at
+    }
+
+    SUBJECTS {
+        bigint id PK
+        varchar code UK
+        varchar name
+        varchar education_level
+    }
+
+    SCHOOL_CLASSES {
+        bigint id PK
+        bigint school_id FK
+        varchar class_name
+        varchar grade_level
+        varchar academic_year
+        enum status
+        timestamp created_at
+    }
+
+    TEACHERS {
+        bigint id PK
+        bigint user_id FK
+        bigint school_id FK
+        varchar full_name
+        varchar department
+        enum status
+        timestamp created_at
+    }
+
+    EDUCATIONAL_REQUIREMENTS {
+        bigint id PK
+        bigint subject_id FK
+        varchar code UK
+        varchar description
+        varchar education_level
+    }
+
+    PROGRAMS {
+        bigint id PK
+        bigint organizer_id FK
+        varchar code UK
+        varchar name
+        varchar education_level
+        decimal base_cost_per_student
+        smallint duration_days
+        smallint capacity
+        enum status
+        text description
+    }
+
+    PROGRAM_REQUIREMENTS {
+        bigint program_id FK
+        bigint requirement_id FK
+        text mapping_note
+    }
+
+    PROGRAM_SCHEDULES {
+        bigint id PK
+        bigint program_id FK
+        date trip_date
+        time start_time
+        time end_time
+        smallint capacity
+        decimal cost_override
+        enum status
+    }
+
+    PROGRAM_SUBJECTS {
+        bigint program_id FK
+        bigint subject_id FK
+        varchar learning_role
+    }
+
+    PLACES {
+        bigint id PK
+        varchar name
+        varchar province
+        decimal lat
+        decimal lng
+        varchar best_season
+        smallint visit_minutes
+        text description
+        varchar source_note
+    }
+
+    PARENTS {
+        bigint id PK
+        bigint user_id FK
+        varchar full_name
+        varchar phone
+        varchar relationship_note
+        timestamp created_at
+    }
+
+    STUDENTS {
+        bigint id PK
+        bigint class_id FK
+        varchar student_code UK
+        varchar full_name
+        smallint birth_year
+        text medical_info_encrypted
+        timestamp created_at
+    }
+
+    PARENT_STUDENT {
+        bigint parent_id FK
+        bigint student_id FK
+        enum relationship_type
+        boolean is_primary
+    }
+
+    PARENT_NOTIFICATIONS {
+        bigint id PK
+        bigint parent_id FK
+        bigint student_id FK
+        bigint schedule_id FK
+        enum notification_type
+        varchar title
+        text message
+        timestamp sent_at
+        timestamp read_at
+    }
+
+    CLASS_REGISTRATIONS {
+        bigint id PK
+        bigint class_id FK
+        bigint schedule_id FK
+        enum status
+        timestamp registered_at
+    }
+
+    LEARNING_EVALUATIONS {
+        bigint id PK
+        bigint student_id FK
+        bigint schedule_id FK
+        bigint teacher_id FK
+        decimal learning_score
+        text learning_outcome
+        timestamp evaluated_at
+    }
+
+    TEACHER_ASSIGNMENTS {
+        bigint id PK
+        bigint schedule_id FK
+        bigint teacher_id FK
+        enum assignment_role
+        timestamp assigned_at
+    }
+
+    SAFETY_PROFILES {
+        bigint id PK
+        bigint schedule_id FK
+        enum risk_level
+        text first_aid_plan
+        text emergency_plan
+        varchar weather_threshold
+        text emergency_contact
+        timestamp reviewed_at
+    }
+
+    SCHEDULE_STOPS {
+        bigint id PK
+        bigint schedule_id FK
+        bigint place_id FK
+        tinyint seq_no
+        text activity
+        smallint duration_minutes
+    }
+
+    ATTENDANCE_POINTS {
+        bigint id PK
+        bigint schedule_id FK
+        tinyint seq_no
+        varchar point_name
+        timestamp checkpoint_at
+    }
+
+    PARENT_CONSENTS {
+        bigint id PK
+        bigint registration_id FK
+        bigint parent_id FK
+        bigint student_id FK
+        enum consent_status
+        timestamp consented_at
+        text note
+    }
+
+    ATTENDANCE_RECORDS {
+        bigint id PK
+        bigint attendance_point_id FK
+        bigint student_id FK
+        enum attendance_status
+        bigint recorded_by FK
+        timestamp recorded_at
+    }
+
+    USERS ||--o{ AUDIT_LOGS : "actor_id"
+    USERS ||--o{ SCHOOLS : "user_id"
+    USERS ||--o{ ORGANIZERS : "user_id"
+    USERS ||--o{ TEACHERS : "user_id"
+    USERS ||--o{ PARENTS : "user_id"
+    USERS ||--o{ ATTENDANCE_RECORDS : "recorded_by"
+
+    SCHOOLS ||--o{ SCHOOL_CLASSES : "school_id"
+    SCHOOLS ||--o{ TEACHERS : "school_id"
+
+    SCHOOL_CLASSES ||--o{ STUDENTS : "class_id"
+    SCHOOL_CLASSES ||--o{ CLASS_REGISTRATIONS : "class_id"
+
+    SUBJECTS ||--o{ EDUCATIONAL_REQUIREMENTS : "subject_id"
+    SUBJECTS ||--o{ PROGRAM_SUBJECTS : "subject_id"
+
+    ORGANIZERS ||--o{ PROGRAMS : "organizer_id"
+
+    PROGRAMS ||--o{ PROGRAM_REQUIREMENTS : "program_id"
+    PROGRAMS ||--o{ PROGRAM_SCHEDULES : "program_id"
+    PROGRAMS ||--o{ PROGRAM_SUBJECTS : "program_id"
+
+    EDUCATIONAL_REQUIREMENTS ||--o{ PROGRAM_REQUIREMENTS : "requirement_id"
+
+    PROGRAM_SCHEDULES ||--o{ PARENT_NOTIFICATIONS : "schedule_id"
+    PROGRAM_SCHEDULES ||--o{ CLASS_REGISTRATIONS : "schedule_id"
+    PROGRAM_SCHEDULES ||--o{ LEARNING_EVALUATIONS : "schedule_id"
+    PROGRAM_SCHEDULES ||--o{ TEACHER_ASSIGNMENTS : "schedule_id"
+    PROGRAM_SCHEDULES ||--o{ SAFETY_PROFILES : "schedule_id"
+    PROGRAM_SCHEDULES ||--o{ SCHEDULE_STOPS : "schedule_id"
+    PROGRAM_SCHEDULES ||--o{ ATTENDANCE_POINTS : "schedule_id"
+
+    PLACES ||--o{ SCHEDULE_STOPS : "place_id"
+
+    PARENTS ||--o{ PARENT_STUDENT : "parent_id"
+    STUDENTS ||--o{ PARENT_STUDENT : "student_id"
+    PARENTS ||--o{ PARENT_NOTIFICATIONS : "parent_id"
+    STUDENTS ||--o{ PARENT_NOTIFICATIONS : "student_id"
+    STUDENTS ||--o{ LEARNING_EVALUATIONS : "student_id"
+    TEACHERS ||--o{ LEARNING_EVALUATIONS : "teacher_id"
+    TEACHERS ||--o{ TEACHER_ASSIGNMENTS : "teacher_id"
+
+    CLASS_REGISTRATIONS ||--o{ PARENT_CONSENTS : "registration_id"
+    PARENTS ||--o{ PARENT_CONSENTS : "parent_id"
+    STUDENTS ||--o{ PARENT_CONSENTS : "student_id"
+
+    ATTENDANCE_POINTS ||--o{ ATTENDANCE_RECORDS : "attendance_point_id"
+    STUDENTS ||--o{ ATTENDANCE_RECORDS : "student_id"
+    

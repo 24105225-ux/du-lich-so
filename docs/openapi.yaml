@@ -1,0 +1,86 @@
+openapi: 3.0.3
+
+info:
+  title: API Du Lich Hoc Duong CSE703073
+  description: API cho nền tảng du lịch học đường ĐT-17
+  version: 1.0.0
+
+servers:
+  - url: http://127.0.0.1:8000
+
+paths:
+  /api/v1/programs:
+    get:
+      summary: Danh sách chương trình trải nghiệm
+      parameters:
+        - name: keyword
+          in: query
+          schema:
+            type: string
+
+        - name: education_level
+          in: query
+          schema:
+            type: string
+            enum:
+              - TH
+              - THCS
+              - THPT
+
+        - name: min_price
+          in: query
+          schema:
+            type: number
+            minimum: 0
+
+        - name: max_price
+          in: query
+          schema:
+            type: number
+            minimum: 0
+
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum:
+              - newest
+              - price_asc
+              - price_desc
+
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 9
+
+      responses:
+        "200":
+          description: Danh sách chương trình thành công
+
+        "422":
+          description: Tham số không hợp lệ
+
+  /api/v1/programs/{program}:
+    get:
+      summary: Chi tiết chương trình
+
+      parameters:
+        - name: program
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        "200":
+          description: Chi tiết chương trình
+
+        "404":
+          description: Không tìm thấy chương trình
