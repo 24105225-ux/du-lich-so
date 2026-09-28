@@ -30,7 +30,7 @@ class StoreClassRegistrationRequest extends FormRequest
                 'required',
                 'integer',
                 'min:1',
-                'max:60',
+                'max:25',
             ],
 
             'note' => [
@@ -60,7 +60,7 @@ class StoreClassRegistrationRequest extends FormRequest
                 'Số học sinh phải từ 1 trở lên.',
 
             'student_count.max' =>
-                'Số học sinh đăng ký tối đa mỗi lần là 60.',
+                'Số học sinh đăng ký tối đa mỗi lần là 25.',
 
             'note.max' =>
                 'Ghi chú không được vượt quá 500 ký tự.',
