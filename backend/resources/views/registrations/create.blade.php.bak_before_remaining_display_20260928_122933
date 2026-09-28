@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Đăng ký chương trình theo lớp')
 
@@ -98,7 +98,6 @@
                         <option
                             value="{{ $schedule->id }}"
                             data-capacity="{{ $schedule->capacity }}"
-                            data-base-label="{{ $schedule->program?->name }} - {{ $schedule->trip_date->format('d/m/Y') }}"
                             @selected(
                                 old('program_schedule_id')
                                 == $schedule->id
@@ -108,7 +107,7 @@
                             -
                             {{ $schedule->trip_date->format('d/m/Y') }}
                             -
-                            {{ $schedule->capacity }} chỗ tối đa
+                            {{ $schedule->capacity }} chỗ
                         </option>
                     @endforeach
                 </select>
@@ -177,6 +176,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const studentInput =
         document.getElementById('student_count');
 
+    const classInfo =
+        document.getElementById('class-info');
+
     const scheduleInfo =
         document.getElementById('schedule-info');
 
@@ -188,74 +190,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let remainingSeats = null;
 
-    function getSelectedSchedule() {
-        return scheduleSelect.options[
-            scheduleSelect.selectedIndex
-        ];
-    }
-
-    function updateScheduleInfo() {
-        const selectedSchedule =
-            getSelectedSchedule();
-
-        if (!selectedSchedule) {
-            scheduleInfo.textContent = '';
-            return;
-        }
-
-        const capacity =
-            Number(
-                selectedSchedule.dataset.capacity || 0
-            );
-
-        if (capacity > 0) {
-            scheduleInfo.textContent =
-                `Sức chứa tối đa của lịch trình: ${capacity} chỗ.`;
-        } else {
-            scheduleInfo.textContent = '';
-        }
-    }
-
-    function updateScheduleOptionLabel() {
-        const selectedSchedule =
-            getSelectedSchedule();
-
-        if (!selectedSchedule) {
-            return;
-        }
-
-        const baseLabel =
-            selectedSchedule.dataset.baseLabel || '';
-
-        const capacity =
-            Number(
-                selectedSchedule.dataset.capacity || 0
-            );
-
-        if (!baseLabel || capacity <= 0) {
-            return;
-        }
-
-        if (remainingSeats === null) {
-            selectedSchedule.textContent =
-                `${baseLabel} - ${capacity} chỗ tối đa`;
-            return;
-        }
-
-        selectedSchedule.textContent =
-            `${baseLabel} - Còn ${remainingSeats}/${capacity} chỗ`;
-    }
-
     async function loadRemainingSeats() {
-        const classId =
-            classSelect.value;
-
-        const scheduleId =
-            scheduleSelect.value;
+        const classId = classSelect.value;
+        const scheduleId = scheduleSelect.value;
 
         remainingSeats = null;
-
-        updateScheduleOptionLabel();
 
         if (!classId || !scheduleId) {
             remainingInfo.textContent = '';
@@ -282,15 +221,14 @@ document.addEventListener('DOMContentLoaded', function () {
         );
 
         try {
-            const response =
-                await fetch(
-                    url.toString(),
-                    {
-                        headers: {
-                            'Accept': 'application/json'
-                        }
+            const response = await fetch(
+                url.toString(),
+                {
+                    headers: {
+                        'Accept': 'application/json'
                     }
-                );
+                }
+            );
 
             if (!response.ok) {
                 throw new Error(
@@ -298,22 +236,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 );
             }
 
-            const data =
-                await response.json();
+            const data = await response.json();
 
             remainingSeats =
                 Number(data.remainingSeats);
 
-            updateScheduleOptionLabel();
             updateRemainingMessage();
 
         } catch (error) {
             remainingSeats = null;
 
-            updateScheduleOptionLabel();
-
             remainingInfo.textContent =
                 'Không thể kiểm tra số chỗ trống.';
+        }
+    }
+
+    function updateInfo() {
+        const selectedSchedule =
+            scheduleSelect.options[
+                scheduleSelect.selectedIndex
+            ];
+
+        const capacity =
+            selectedSchedule?.dataset.capacity
+                ? Number(
+                    selectedSchedule.dataset.capacity
+                )
+                : 0;
+
+        if (capacity > 0) {
+            scheduleInfo.textContent =
+                `Sức chứa lịch trình: ${capacity} chỗ.`;
+        } else {
+            scheduleInfo.textContent = '';
         }
     }
 
@@ -367,10 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
     scheduleSelect.addEventListener(
         'change',
         function () {
-            remainingSeats = null;
-
-            updateScheduleInfo();
-            updateScheduleOptionLabel();
+            updateInfo();
             loadRemainingSeats();
         }
     );
@@ -384,9 +336,7 @@ document.addEventListener('DOMContentLoaded', function () {
         'submit',
         function (event) {
             const requested =
-                Number(
-                    studentInput.value || 0
-                );
+                Number(studentInput.value || 0);
 
             if (
                 requested < 1 ||
@@ -413,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     );
 
-    updateScheduleInfo();
+    updateInfo();
 
     if (
         classSelect.value &&

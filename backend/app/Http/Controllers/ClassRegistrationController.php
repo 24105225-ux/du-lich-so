@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreClassRegistrationRequest;
 use App\Services\ClassRegistrationService;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use RuntimeException;
@@ -23,6 +25,30 @@ class ClassRegistrationController extends Controller
         );
     }
 
+    public function remainingSeats(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'class_id' => [
+                'required',
+                'integer',
+                'exists:school_classes,id',
+            ],
+            'program_schedule_id' => [
+                'required',
+                'integer',
+                'exists:program_schedules,id',
+            ],
+        ]);
+
+        $remainingSeats = $this->registrations->remainingSeats(
+            (int) $validated['class_id'],
+            (int) $validated['program_schedule_id']
+        );
+
+        return response()->json([
+            'remainingSeats' => $remainingSeats,
+        ]);
+    }
     public function store(
         StoreClassRegistrationRequest $request
     ) {
@@ -85,3 +111,4 @@ class ClassRegistrationController extends Controller
         );
     }
 }
+

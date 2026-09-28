@@ -34,3 +34,7 @@ Route::get(
     '/dang-ky-theo-lop/{registration}/thanh-cong',
     [ClassRegistrationController::class, 'success']
 )->name('registrations.success');
+Route::get(
+    '/dang-ky-theo-lop/remaining-seats',
+    [ClassRegistrationController::class, 'remainingSeats']
+)->name('registrations.remaining-seats');
