@@ -132,6 +132,10 @@ class ClassRegistrationService
                 $usedSeats =
                     ClassRegistration::query()
                         ->where(
+                            'class_id',
+                            $schoolClass->id
+                        )
+                        ->where(
                             'program_schedule_id',
                             $schedule->id
                         )
