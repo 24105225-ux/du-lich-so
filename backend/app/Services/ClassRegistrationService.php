@@ -5,24 +5,44 @@ namespace App\Services;
 use App\Models\ClassRegistration;
 use App\Models\ProgramSchedule;
 use App\Models\SchoolClass;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
 class ClassRegistrationService
 {
-    public function formData(): array
+    public function formData(User $actor): array
     {
-        $classes = SchoolClass::query()
+        $classQuery = SchoolClass::query()
             ->with('school:id,name')
-            ->withCount('students')
             ->orderBy('school_id')
-            ->orderBy('class_name')
-            ->get();
+            ->orderBy('class_name');
+
+        if ($actor->role === 'school') {
+            $classQuery->whereHas(
+                'school',
+                function ($query) use ($actor) {
+                    $query->where(
+                        'user_id',
+                        $actor->id
+                    );
+                }
+            );
+        }
+
+        $classes = $classQuery->get();
 
         $schedules = ProgramSchedule::query()
-            ->with('program:id,name')
-            ->where('status', 'open')
-            ->whereDate('trip_date', '>=', today())
+            ->with('program:id,title')
+            ->where(
+                'status',
+                'open'
+            )
+            ->whereDate(
+                'trip_date',
+                '>=',
+                today()
+            )
             ->orderBy('trip_date')
             ->orderBy('start_time')
             ->get();
@@ -33,94 +53,124 @@ class ClassRegistrationService
         ];
     }
 
-    public function remainingSeats(
-        int $classId,
-        int $scheduleId
-    ): int {
-        $schedule = ProgramSchedule::query()
-            ->whereKey($scheduleId)
-            ->firstOrFail();
-
-        $used = ClassRegistration::query()
-            ->where('class_id', $classId)
-            ->where('schedule_id', $scheduleId)
-            ->whereIn('status', ['pending', 'approved'])
-            ->sum('student_count');
-
-        return max(
-            0,
-            (int) $schedule->capacity - (int) $used
-        );
-    }
-
     public function register(
+        User $actor,
         int $classId,
         int $scheduleId,
-        int $studentCount
+        int $studentCount,
+        ?string $note = null
     ): ClassRegistration {
-        return DB::transaction(function () use (
-            $classId,
-            $scheduleId,
-            $studentCount
-        ) {
-            $schedule = ProgramSchedule::query()
-                ->whereKey($scheduleId)
-                ->lockForUpdate()
-                ->firstOrFail();
+        return DB::transaction(
+            function () use (
+                $actor,
+                $classId,
+                $scheduleId,
+                $studentCount,
+                $note
+            ) {
+                $schedule =
+                    ProgramSchedule::query()
+                        ->whereKey($scheduleId)
+                        ->lockForUpdate()
+                        ->firstOrFail();
 
-            SchoolClass::query()
-                ->whereKey($classId)
-                ->firstOrFail();
+                $schoolClass =
+                    SchoolClass::query()
+                        ->with('school')
+                        ->whereKey($classId)
+                        ->firstOrFail();
 
-            if ($schedule->status !== 'open') {
-                throw new RuntimeException(
-                    'Lịch trình hiện không mở đăng ký.'
-                );
+                if (
+                    $actor->role === 'school' &&
+                    $schoolClass->school?->user_id
+                        !== $actor->id
+                ) {
+                    throw new RuntimeException(
+                        'Bạn không có quyền sử dụng lớp học này.'
+                    );
+                }
+
+                if (
+                    $schedule->status !== 'open'
+                ) {
+                    throw new RuntimeException(
+                        'Chương trình hiện không mở đăng ký.'
+                    );
+                }
+
+                if (
+                    $studentCount >
+                    $schoolClass->student_count
+                ) {
+                    throw new RuntimeException(
+                        'Số học sinh đăng ký không được lớn hơn sĩ số lớp.'
+                    );
+                }
+
+                $duplicate =
+                    ClassRegistration::query()
+                        ->where(
+                            'class_id',
+                            $schoolClass->id
+                        )
+                        ->where(
+                            'program_schedule_id',
+                            $schedule->id
+                        )
+                        ->whereIn(
+                            'status',
+                            ['pending', 'approved']
+                        )
+                        ->exists();
+
+                if ($duplicate) {
+                    throw new RuntimeException(
+                        'Lớp này đã đăng ký chương trình này.'
+                    );
+                }
+
+                $usedSeats =
+                    ClassRegistration::query()
+                        ->where(
+                            'program_schedule_id',
+                            $schedule->id
+                        )
+                        ->whereIn(
+                            'status',
+                            ['pending', 'approved']
+                        )
+                        ->sum('student_count');
+
+                $remainingSeats =
+                    (int) $schedule->capacity
+                    - (int) $usedSeats;
+
+                if (
+                    $studentCount >
+                    $remainingSeats
+                ) {
+                    throw new RuntimeException(
+                        "Chỉ còn {$remainingSeats} chỗ trống."
+                    );
+                }
+
+                return ClassRegistration::create([
+                    'class_id' =>
+                        $schoolClass->id,
+
+                    'program_schedule_id' =>
+                        $schedule->id,
+
+                    'student_count' =>
+                        $studentCount,
+
+                    'status' =>
+                        'pending',
+
+                    'note' =>
+                        $note,
+                ]);
             }
-
-            if ($studentCount < 1) {
-                throw new RuntimeException(
-                    'Số học sinh đăng ký phải từ 1 trở lên.'
-                );
-            }
-
-            $duplicate = ClassRegistration::query()
-                ->where('class_id', $classId)
-                ->where('schedule_id', $scheduleId)
-                ->whereIn('status', ['pending', 'approved'])
-                ->exists();
-
-            if ($duplicate) {
-                throw new RuntimeException(
-                    'Lớp này đã đăng ký lịch trình này.'
-                );
-            }
-
-            $used = ClassRegistration::query()
-                ->where('class_id', $classId)
-                ->where('schedule_id', $scheduleId)
-                ->whereIn('status', ['pending', 'approved'])
-                ->sum('student_count');
-
-            $capacity = (int) $schedule->capacity;
-
-            $remainingSeats = max(
-                0,
-                $capacity - (int) $used
-            );
-
-            if ($studentCount > $remainingSeats) {
-                throw new RuntimeException(
-                    "Chỉ còn {$remainingSeats} chỗ trống."
-                );
-            }
-
-            return ClassRegistration::create([
-                'class_id' => $classId,
-                'schedule_id' => $scheduleId,
-                'student_count' => $studentCount,
-                'status' => 'pending',
-            ]);
-        });
+        );
     }
 }

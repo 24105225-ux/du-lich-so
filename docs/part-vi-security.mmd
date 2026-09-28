@@ -1,0 +1,33 @@
+flowchart TD
+    A["Người dùng"] --> B["Đăng nhập"]
+    A --> C["@csrf"]
+    A --> D["HTTPS + Security Headers"]
+    B --> E["Laravel Auth"]
+    E --> F["Database Session"]
+    E --> G["EnsureRole"]
+    E --> H["Hash::make / Hash::check"]
+    G --> I["Policy"]
+    G --> J["Security Log"]
+    I --> K["Controller"]
+    K --> L["Service"]
+    K --> M["Blade escaping"]
+    K --> N["Crypt::encryptString"]
+    L --> O["Eloquent Model"]
+    O --> P["MySQL"]
+
+    style A fill:#dbeafe,stroke:#93c5fd
+    style B fill:#dbeafe,stroke:#93c5fd
+    style C fill:#dbeafe,stroke:#93c5fd
+    style D fill:#dbeafe,stroke:#93c5fd
+    style E fill:#dbeafe,stroke:#93c5fd
+    style F fill:#dbeafe,stroke:#93c5fd
+    style G fill:#dbeafe,stroke:#93c5fd
+    style H fill:#dbeafe,stroke:#93c5fd
+    style I fill:#dbeafe,stroke:#93c5fd
+    style J fill:#dbeafe,stroke:#93c5fd
+    style K fill:#dbeafe,stroke:#93c5fd
+    style L fill:#dbeafe,stroke:#93c5fd
+    style M fill:#dbeafe,stroke:#93c5fd
+    style N fill:#dbeafe,stroke:#93c5fd
+    style O fill:#dbeafe,stroke:#93c5fd
+    style P fill:#dbeafe,stroke:#93c5fd
