@@ -75,6 +75,10 @@ Route::middleware('auth')->group(function () {
             )->name('school.dashboard');
 
             Route::get(
+                '/dang-ky-theo-lop/remaining-seats',
+                [ClassRegistrationController::class, 'remainingSeats']
+            )->name('registrations.remaining-seats');
+            Route::get(
                 '/dang-ky-theo-lop',
                 [ClassRegistrationController::class, 'create']
             )->name('registrations.create');

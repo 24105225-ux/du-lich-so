@@ -53,6 +53,40 @@ class ClassRegistrationService
         ];
     }
 
+    public function remainingSeats(
+        User $actor,
+        int $classId,
+        int $scheduleId
+    ): int {
+        $schedule = ProgramSchedule::query()
+            ->whereKey($scheduleId)
+            ->firstOrFail();
+
+        $schoolClass = SchoolClass::query()
+            ->with('school')
+            ->whereKey($classId)
+            ->firstOrFail();
+
+        if (
+            $actor->role === 'school' &&
+            $schoolClass->school?->user_id !== $actor->id
+        ) {
+            throw new RuntimeException(
+                'Bạn không có quyền sử dụng lớp học này.'
+            );
+        }
+
+        $usedSeats = ClassRegistration::query()
+            ->where('class_id', $schoolClass->id)
+            ->where('schedule_id', $schedule->id)
+            ->whereIn('status', ['pending', 'approved'])
+            ->sum('student_count');
+
+        return max(
+            0,
+            (int) $schedule->capacity - (int) $usedSeats
+        );
+    }
     public function register(
         User $actor,
         int $classId,

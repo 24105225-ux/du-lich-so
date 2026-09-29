@@ -7,6 +7,7 @@ use App\Models\ClassRegistration;
 use App\Services\ClassRegistrationService;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -30,6 +31,18 @@ class ClassRegistrationController extends Controller
         );
     }
 
+    public function remainingSeats(): JsonResponse
+    {
+        $remainingSeats = $this->registrations->remainingSeats(
+            request()->user(),
+            (int) request()->query('class_id'),
+            (int) request()->query('program_schedule_id')
+        );
+
+        return response()->json([
+            'remainingSeats' => $remainingSeats,
+        ]);
+    }
     public function store(
         StoreClassRegistrationRequest $request
     ): RedirectResponse {
