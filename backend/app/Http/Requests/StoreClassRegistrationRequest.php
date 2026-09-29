@@ -32,12 +32,6 @@ class StoreClassRegistrationRequest extends FormRequest
                 'min:1',
                 'max:25',
             ],
-
-            'note' => [
-                'nullable',
-                'string',
-                'max:500',
-            ],
         ];
     }
 
@@ -61,9 +55,6 @@ class StoreClassRegistrationRequest extends FormRequest
 
             'student_count.max' =>
                 'Số học sinh đăng ký tối đa mỗi lần là 25.',
-
-            'note.max' =>
-                'Ghi chú không được vượt quá 500 ký tự.',
         ];
     }
 }

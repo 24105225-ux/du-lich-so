@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html
     lang="vi"
-    data-theme="{{ session('theme', 'sang') }}"
+    data-theme="{{ request()->cookie('theme', 'sang') }}"
 >
 <head>
     <meta charset="utf-8">
@@ -22,14 +22,6 @@
             'Du lịch học đường - CSE703073'
         )
     </title>
-
-    <meta
-        name="description"
-        content="@yield(
-            'meta_description',
-            'Nền tảng du lịch học đường và chương trình trải nghiệm giáo dục'
-        )"
-    >
 
     @vite([
         'resources/css/app.css',

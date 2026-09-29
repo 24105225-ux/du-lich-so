@@ -24,7 +24,7 @@
             <p>
                 Chương trình:
                 <strong>
-                    {{ $registration->schedule?->program?->title }}
+                    {{ $registration->schedule?->program?->name }}
                 </strong>
             </p>
 
