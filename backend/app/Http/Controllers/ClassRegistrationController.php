@@ -39,8 +39,7 @@ class ClassRegistrationController extends Controller
                     $request->user(),
                     (int) $request->class_id,
                     (int) $request->program_schedule_id,
-                    (int) $request->student_count,
-                    $request->note
+                    (int) $request->student_count
                 );
         } catch (RuntimeException $e) {
             Log::warning(

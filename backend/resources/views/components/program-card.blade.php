@@ -5,7 +5,7 @@
         </span>
 
         <h2 class="card__title">
-            {{ $program->title }}
+            {{ $program->name }}
         </h2>
 
         <p>

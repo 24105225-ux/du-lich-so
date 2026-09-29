@@ -2,7 +2,7 @@
 
 @section(
     'title',
-    $program->title . ' | Du lịch học đường'
+    $program->name . ' | Du lịch học đường'
 )
 
 @section('content')
@@ -25,7 +25,7 @@
             <span>/</span>
 
             <span aria-current="page">
-                {{ $program->title }}
+                {{ $program->name }}
             </span>
         </nav>
 
@@ -36,7 +36,7 @@
                 </span>
 
                 <h1>
-                    {{ $program->title }}
+                    {{ $program->name }}
                 </h1>
 
                 <p class="lead">

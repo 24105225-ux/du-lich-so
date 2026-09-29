@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', 'Đăng ký chương trình theo lớp')
 
@@ -143,17 +143,7 @@
             </div>
 
             <div class="form-group">
-                <label for="note">
-                    Ghi chú
-                </label>
-
-                <textarea
-                    id="note"
-                    name="note"
-                    rows="5"
-                    maxlength="500"
-                >{{ old('note') }}</textarea>
-            </div>
+</div>
 
             <button
                 type="submit"

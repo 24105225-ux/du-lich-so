@@ -33,7 +33,7 @@ class ClassRegistrationService
         $classes = $classQuery->get();
 
         $schedules = ProgramSchedule::query()
-            ->with('program:id,title')
+            ->with('program:id,name')
             ->where(
                 'status',
                 'open'
@@ -57,16 +57,14 @@ class ClassRegistrationService
         User $actor,
         int $classId,
         int $scheduleId,
-        int $studentCount,
-        ?string $note = null
+        int $studentCount
     ): ClassRegistration {
         return DB::transaction(
             function () use (
                 $actor,
                 $classId,
                 $scheduleId,
-                $studentCount,
-                $note
+                $studentCount
             ) {
                 $schedule =
                     ProgramSchedule::query()
@@ -100,7 +98,7 @@ class ClassRegistrationService
 
                 if (
                     $studentCount >
-                    $schoolClass->student_count
+                    $schoolClass->students()->count()
                 ) {
                     throw new RuntimeException(
                         'Số học sinh đăng ký không được lớn hơn sĩ số lớp.'
@@ -114,7 +112,7 @@ class ClassRegistrationService
                             $schoolClass->id
                         )
                         ->where(
-                            'program_schedule_id',
+                            'schedule_id',
                             $schedule->id
                         )
                         ->whereIn(
@@ -136,7 +134,7 @@ class ClassRegistrationService
                             $schoolClass->id
                         )
                         ->where(
-                            'program_schedule_id',
+                            'schedule_id',
                             $schedule->id
                         )
                         ->whereIn(
@@ -162,7 +160,7 @@ class ClassRegistrationService
                     'class_id' =>
                         $schoolClass->id,
 
-                    'program_schedule_id' =>
+                    'schedule_id' =>
                         $schedule->id,
 
                     'student_count' =>
@@ -170,10 +168,7 @@ class ClassRegistrationService
 
                     'status' =>
                         'pending',
-
-                    'note' =>
-                        $note,
-                ]);
+]);
             }
         );
     }
