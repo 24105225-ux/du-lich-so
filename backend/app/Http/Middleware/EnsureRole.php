@@ -25,19 +25,14 @@ class EnsureRole
             )
         ) {
             Log::warning(
-                'Truy cap trai phep',
+                'Unauthorized role access',
                 [
-                    'user_id' =>
-                        $user?->id,
-
-                    'role' =>
-                        $user?->role,
-
-                    'path' =>
-                        $request->path(),
-
-                    'ip' =>
-                        $request->ip(),
+                    'user_id' => $user?->id,
+                    'role' => $user?->role,
+                    'required_roles' => $roles,
+                    'path' => $request->path(),
+                    'method' => $request->method(),
+                    'ip' => $request->ip(),
                 ]
             );
 
