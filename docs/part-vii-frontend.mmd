@@ -1,0 +1,31 @@
+flowchart TD
+    A["Người dùng"] --> B["Vue 3 + Vite"]
+    B --> C["Vue Router 4"]
+    B --> D["Theme Tokens"]
+    C --> E["HomeView"]
+    C --> F["ProgramListView"]
+    C --> G["ProgramDetailView"]
+    C --> H["RegistrationView"]
+    C --> I["NotFoundView"]
+    D --> J["localStorage"]
+    D --> K["Theme Cookie"]
+    E --> L["Laravel API<br/>/api/v1"]
+    F --> L
+    G --> L
+    L --> M["Laravel 11"]
+    M --> N["MySQL 8"]
+
+    style A fill:#dbeafe,stroke:#93c5fd
+    style B fill:#dbeafe,stroke:#93c5fd
+    style C fill:#dbeafe,stroke:#93c5fd
+    style D fill:#dbeafe,stroke:#93c5fd
+    style E fill:#dbeafe,stroke:#93c5fd
+    style F fill:#dbeafe,stroke:#93c5fd
+    style G fill:#dbeafe,stroke:#93c5fd
+    style H fill:#dbeafe,stroke:#93c5fd
+    style I fill:#dbeafe,stroke:#93c5fd
+    style J fill:#dbeafe,stroke:#93c5fd
+    style K fill:#dbeafe,stroke:#93c5fd
+    style L fill:#dbeafe,stroke:#93c5fd
+    style M fill:#dbeafe,stroke:#93c5fd
+    style N fill:#dbeafe,stroke:#93c5fd

@@ -1,0 +1,152 @@
+:root {
+    --kc-1: 4px;
+    --kc-2: 8px;
+    --kc-3: 16px;
+    --kc-4: 24px;
+    --kc-5: 40px;
+
+    --bo-goc: 10px;
+
+    --chu-than:
+        Inter,
+        system-ui,
+        -apple-system,
+        "Segoe UI",
+        sans-serif;
+
+    --co-chu-than: 16px;
+    --co-chu-nho: 14px;
+    --co-chu-lon: 20px;
+
+    --do-cao-dong: 1.55;
+}
+
+/* =========================
+   CHỦ ĐỀ SÁNG
+   ========================= */
+
+[data-theme="sang"] {
+    --mau-nen: #ffffff;
+    --mau-nen-phu: #f2f5f9;
+    --mau-chu: #16202b;
+    --mau-chu-nhat: #566274;
+    --mau-chinh: #1c7293;
+    --mau-chinh-dam: #14556e;
+    --mau-nhan: #b85042;
+    --mau-vien: #d5dde6;
+    --do-bong:
+        0 1px 3px rgba(22, 32, 43, 0.12);
+}
+
+/* =========================
+   CHỦ ĐỀ TỐI
+   ========================= */
+
+[data-theme="toi"] {
+    --mau-nen: #10161d;
+    --mau-nen-phu: #1a2330;
+    --mau-chu: #e8edf3;
+    --mau-chu-nhat: #a3afbe;
+    --mau-chinh: #4fb3d9;
+    --mau-chinh-dam: #79c9e8;
+    --mau-nhan: #e58c7f;
+    --mau-vien: #2a3542;
+    --do-bong:
+        0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* =========================
+   THÀNH PHẦN CHUNG
+   ========================= */
+
+html {
+    background: var(--mau-nen);
+}
+
+body {
+    margin: 0;
+
+    background: var(--mau-nen);
+    color: var(--mau-chu);
+
+    font-family: var(--chu-than);
+    font-size: var(--co-chu-than);
+    line-height: var(--do-cao-dong);
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+a {
+    color: var(--mau-chinh);
+}
+
+.the-sp {
+    background: var(--mau-nen-phu);
+    border: 1px solid var(--mau-vien);
+    border-radius: var(--bo-goc);
+    box-shadow: var(--do-bong);
+    padding: var(--kc-3);
+}
+
+.nut-chinh,
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 42px;
+
+    padding:
+        var(--kc-2)
+        var(--kc-3);
+
+    border:
+        1px solid
+        transparent;
+
+    border-radius: var(--bo-goc);
+
+    background: var(--mau-chinh);
+    color: #ffffff;
+
+    font: inherit;
+    font-weight: 700;
+
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.nut-chinh:hover,
+.button:hover {
+    background: var(--mau-chinh-dam);
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.nut-chinh:focus-visible,
+.button:focus-visible,
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid var(--mau-nhan);
+    outline-offset: 2px;
+}
+
+.button--secondary {
+    background: transparent;
+    color: var(--mau-chinh);
+    border-color: var(--mau-chinh);
+}
+
+.button--secondary:hover {
+    color: var(--mau-chinh-dam);
+    background: var(--mau-nen-phu);
+}

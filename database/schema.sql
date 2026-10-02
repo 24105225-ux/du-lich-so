@@ -733,3 +733,17 @@ CREATE TABLE audit_logs (
 ) ENGINE=InnoDB;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+CREATE TABLE IF NOT EXISTS program_reviews (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    program_id BIGINT UNSIGNED NOT NULL,
+    user_id BIGINT UNSIGNED NOT NULL,
+    rating TINYINT UNSIGNED NOT NULL,
+    comment TEXT NULL,
+    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_program_user (program_id, user_id),
+    KEY idx_program_reviews_program (program_id),
+    KEY idx_program_reviews_user (user_id)
+);
