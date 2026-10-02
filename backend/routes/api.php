@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ProgramApiController;
+use App\Http\Controllers\Api\ProgramRecommendationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -308,3 +309,11 @@ Route::prefix('v1')->group(function () {
         [ProgramApiController::class, 'show']
     );
 });
+
+Route::get(
+    '/v1/programs/{program}/recommend',
+    [
+        ProgramRecommendationController::class,
+        'show',
+    ]
+)->middleware('throttle:60,1');

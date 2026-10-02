@@ -1,0 +1,27 @@
+flowchart LR
+    A["Nguoi dung / Nha truong"] --> B["Vue 3<br/>ProgramDetailView"]
+    B --> C["Program Recommendation<br/>API<br/>/api/v1/programs/{id}/<br/>recommend"]
+    C --> D["Laravel 11"]
+    D --> E["FastAPI<br/>Python Service<br/>:8001"]
+    E --> F["analytics.py"]
+    E --> G["recommender.py<br/>TF-IDF +<br/>Cosine Similarity"]
+    D -.->|"timeout / error"| H["Laravel Fallback<br/>name<br/>education_level<br/>and price<br/>range"]
+
+    I["data/raw/places.csv"] --> J["etl_clean.py"]
+    J --> K["data/clean/places_clean.csv"]
+    J --> L["MySQL 8<br/>DT-17"]
+    F --> L
+    G --> L
+
+    style A fill:#dbeafe,stroke:#93c5fd
+    style B fill:#dbeafe,stroke:#93c5fd
+    style C fill:#dbeafe,stroke:#93c5fd
+    style D fill:#dbeafe,stroke:#93c5fd
+    style E fill:#dbeafe,stroke:#93c5fd
+    style F fill:#dbeafe,stroke:#93c5fd
+    style G fill:#dbeafe,stroke:#93c5fd
+    style H fill:#dbeafe,stroke:#93c5fd
+    style I fill:#dbeafe,stroke:#93c5fd
+    style J fill:#dbeafe,stroke:#93c5fd
+    style K fill:#dbeafe,stroke:#93c5fd
+    style L fill:#dbeafe,stroke:#93c5fd

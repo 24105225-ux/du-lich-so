@@ -8,6 +8,8 @@ import {
 import LoadingState from "../components/LoadingState.vue";
 import api from "../lib/api";
 
+import ProgramRecommendations from '../components/ProgramRecommendations.vue'
+
 const route = useRoute();
 
 const program = ref(null);
@@ -456,6 +458,11 @@ async function submitReview() {
             </RouterLink>
         </div>
     </section>
+
+            <ProgramRecommendations
+              v-if="program"
+              :program-id="Number(program.id)"
+             />
 
 </div>
                     </aside>

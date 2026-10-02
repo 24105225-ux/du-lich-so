@@ -1,0 +1,13 @@
+name,province,lat,lng,visit_minutes,source_note
+Trung tam trai nghiem Ha Noi 01,ha noi,21.0280,105.8340,120,Du lieu mo phong DT-17
+Trung tam trai nghiem Ha Noi 02,HN,21.0310,105.8380,180,Du lieu mo phong DT-17
+Khong gian trai nghiem Quang Ninh 01,quang ninh,20.9500,107.0800,240,Du lieu mo phong DT-17
+Khong gian trai nghiem Quang Ninh 01,QUANG NINH,20.9500,107.0800,240,Du lieu trung lap co chu y de kiem thu
+Khu hoc tap Da Nang 01,Da Nang,16.0470,108.2060,150,Du lieu mo phong DT-17
+Khu hoc tap Da Nang 02,Da Nang,16.0500,108.2100,90,Du lieu mo phong DT-17
+Khong gian trai nghiem Ninh Binh 01,Ninh Binh,20.2500,105.9740,300,Du lieu mo phong DT-17
+Diem trai nghiem sai toa do,Ha Noi,45.0000,150.0000,120,Du lieu loi de kiem thu
+Diem thieu toa do,Ha Noi,,,120,Du lieu loi de kiem thu
+Khong gian Hue 01,thua thien hue,16.4637,107.5909,180,Du lieu mo phong DT-17
+Diem Hue trung lap  , Hue ,16.4637,107.5909,180,Du lieu trung lap sau chuan hoa
+Phong thi nghiem giao duc 01,TPHCM,10.7769,106.7009,120,Du lieu mo phong DT-17
