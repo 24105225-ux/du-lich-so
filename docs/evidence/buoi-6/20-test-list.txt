@@ -1,0 +1,23 @@
+﻿BUOI 6 - M2 TEST MATRIX
+=======================
+
+TC-B6-01  Catalog API
+TC-B6-02  Keyword search
+TC-B6-03  Education filter
+TC-B6-04  Min price
+TC-B6-05  Max price
+TC-B6-06  Sort ascending
+TC-B6-07  Server pagination
+TC-B6-08  Program detail
+TC-B6-09  Registration routes
+TC-B6-10  Remaining seats
+TC-B6-11  Schedule capacity
+TC-B6-12  Student count
+TC-B6-13  Create pending registration
+TC-B6-14  Hold 15 minutes
+TC-B6-15  Held seats reduce capacity
+TC-B6-16  Expired hold releases seats
+TC-B6-17  Re-register after expiration
+TC-B6-18  Duplicate active registration rejected
+TC-B6-19  Concurrent final-seat conflict
+TC-B6-20  SQL Injection safety

@@ -42,6 +42,19 @@
                 </strong>
             </p>
 
+            @if (->status === 'pending' && ->hold_expires_at)
+                <p>
+                    Giữ chỗ đến:
+                    <strong>
+                        {{ ->hold_expires_at->format('d/m/Y H:i:s') }}
+                    </strong>
+                </p>
+
+                <p class="form-hint">
+                    Đây là giữ chỗ tạm thời 15 phút. Sau thời điểm trên,
+                    chỗ sẽ được giải phóng để lớp có thể đăng ký lại.
+                </p>
+            @endif
             <div class="hero__actions">
                 <a
                     class="button"

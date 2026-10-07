@@ -1,0 +1,10 @@
+﻿programs
+60
+places
+20
+schedules
+120
+stops
+360
+travel_core_records
+560

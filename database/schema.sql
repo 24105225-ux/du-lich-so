@@ -444,9 +444,11 @@ CREATE TABLE class_registrations (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     class_id BIGINT UNSIGNED NOT NULL,
     schedule_id BIGINT UNSIGNED NOT NULL,
+    UNIQUE KEY uq_class_schedule (class_id, schedule_id),
     student_count SMALLINT UNSIGNED NOT NULL DEFAULT 0,
     status ENUM('pending', 'approved', 'cancelled', 'completed')
         NOT NULL DEFAULT 'pending',
+    hold_expires_at TIMESTAMP NULL,
     registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_reg_class
@@ -459,10 +461,14 @@ CREATE TABLE class_registrations (
         REFERENCES program_schedules(id)
         ON DELETE RESTRICT,
 
-    UNIQUE KEY uq_class_schedule (
+    INDEX idx_reg_class_schedule_status (
         class_id,
-        schedule_id
+        schedule_id,
+    UNIQUE KEY uq_class_schedule (class_id, schedule_id),
+        status
     ),
+
+    INDEX idx_reg_hold_expires (hold_expires_at),
 
     INDEX idx_reg_status (status, registered_at)
 ) ENGINE=InnoDB;

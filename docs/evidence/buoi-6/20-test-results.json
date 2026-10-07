@@ -1,0 +1,182 @@
+[
+    {
+        "id": "TC-B6-01",
+        "name": "Mở API danh mục chương trình",
+        "expected": "HTTP 200 và có data",
+        "actual": "HTTP 200",
+        "result": "PASS",
+        "evidence": "\/api\/v1\/programs?per_page=5",
+        "executed_at": "2026-10-07 20:28:46"
+    },
+    {
+        "id": "TC-B6-02",
+        "name": "Tìm kiếm theo từ khóa",
+        "expected": "Có chương trình phù hợp từ khóa",
+        "actual": "HTTP 200; found=true",
+        "result": "PASS",
+        "evidence": "keyword=Trai nghiem khoa hoc ngoai lop hoc 001",
+        "executed_at": "2026-10-07 20:28:47"
+    },
+    {
+        "id": "TC-B6-03",
+        "name": "Lọc theo cấp học",
+        "expected": "Các kết quả đúng cấp học",
+        "actual": "HTTP 200",
+        "result": "PASS",
+        "evidence": "education_level=Tieu hoc",
+        "executed_at": "2026-10-07 20:28:47"
+    },
+    {
+        "id": "TC-B6-04",
+        "name": "Lọc giá tối thiểu",
+        "expected": "Không có kết quả thấp hơn min_price",
+        "actual": "HTTP 200",
+        "result": "PASS",
+        "evidence": "min_price=450000",
+        "executed_at": "2026-10-07 20:28:48"
+    },
+    {
+        "id": "TC-B6-05",
+        "name": "Lọc giá tối đa",
+        "expected": "Không có kết quả cao hơn max_price",
+        "actual": "HTTP 200",
+        "result": "PASS",
+        "evidence": "max_price=450000",
+        "executed_at": "2026-10-07 20:28:49"
+    },
+    {
+        "id": "TC-B6-06",
+        "name": "Sắp xếp giá tăng dần",
+        "expected": "Dữ liệu tăng dần theo giá",
+        "actual": "HTTP 200",
+        "result": "PASS",
+        "evidence": "sort=price_asc",
+        "executed_at": "2026-10-07 20:28:50"
+    },
+    {
+        "id": "TC-B6-07",
+        "name": "Phân trang server-side",
+        "expected": "per_page=5 và dữ liệu không vượt quá 5",
+        "actual": "HTTP 200; count=5",
+        "result": "PASS",
+        "evidence": "page=1&per_page=5",
+        "executed_at": "2026-10-07 20:28:50"
+    },
+    {
+        "id": "TC-B6-08",
+        "name": "Xem chi tiết chương trình",
+        "expected": "Trả đúng chương trình theo ID",
+        "actual": "HTTP 200",
+        "result": "PASS",
+        "evidence": "\/api\/v1\/programs\/1",
+        "executed_at": "2026-10-07 20:28:51"
+    },
+    {
+        "id": "TC-B6-09",
+        "name": "Route đăng ký lớp",
+        "expected": "Có route GET form + GET số chỗ + POST đăng ký",
+        "actual": "create=true; remaining=true; store=true",
+        "result": "PASS",
+        "evidence": "router inspection",
+        "executed_at": "2026-10-07 20:28:51"
+    },
+    {
+        "id": "TC-B6-10",
+        "name": "Kiểm tra số chỗ còn lại",
+        "expected": "remainingSeats >= 2",
+        "actual": "remainingSeats=20",
+        "result": "PASS",
+        "evidence": "class=2; schedule=1",
+        "executed_at": "2026-10-07 20:28:51"
+    },
+    {
+        "id": "TC-B6-11",
+        "name": "Kiểm tra sức chứa schedule",
+        "expected": "capacity > 0",
+        "actual": "capacity=20",
+        "result": "PASS",
+        "evidence": "schedule=1",
+        "executed_at": "2026-10-07 20:28:51"
+    },
+    {
+        "id": "TC-B6-12",
+        "name": "Kiểm tra sĩ số lớp",
+        "expected": "Lớp có ít nhất 2 học sinh cho bài test",
+        "actual": "student_count=10",
+        "result": "PASS",
+        "evidence": "class=2",
+        "executed_at": "2026-10-07 20:28:51"
+    },
+    {
+        "id": "TC-B6-13",
+        "name": "Tạo đăng ký đặt chỗ",
+        "expected": "Tạo record pending",
+        "actual": "id=26; status=pending",
+        "result": "PASS",
+        "evidence": "class=2; schedule=1",
+        "executed_at": "2026-10-07 20:28:51"
+    },
+    {
+        "id": "TC-B6-14",
+        "name": "Giữ chỗ có thời hạn 15 phút",
+        "expected": "hold_expires_at xấp xỉ hiện tại + 15 phút",
+        "actual": "difference=0s",
+        "result": "PASS",
+        "evidence": "registration=26",
+        "executed_at": "2026-10-07 20:28:51"
+    },
+    {
+        "id": "TC-B6-15",
+        "name": "Giữ chỗ làm giảm số ghế còn lại",
+        "expected": "remaining giảm đúng 1",
+        "actual": "before=20; after=19",
+        "result": "PASS",
+        "evidence": "registration=26",
+        "executed_at": "2026-10-07 20:28:51"
+    },
+    {
+        "id": "TC-B6-16",
+        "name": "Hết hạn giữ chỗ tự trả ghế",
+        "expected": "pending -> cancelled và ghế được trả lại",
+        "actual": "status=cancelled; remaining=20",
+        "result": "PASS",
+        "evidence": "registration=26",
+        "executed_at": "2026-10-07 20:28:51"
+    },
+    {
+        "id": "TC-B6-17",
+        "name": "Đăng ký lại sau khi hold hết hạn",
+        "expected": "Cho phép đăng ký lại",
+        "actual": "id=26; status=pending",
+        "result": "PASS",
+        "evidence": "same class\/schedule",
+        "executed_at": "2026-10-07 20:28:51"
+    },
+    {
+        "id": "TC-B6-18",
+        "name": "Chặn đăng ký trùng",
+        "expected": "Lần thứ hai bị từ chối",
+        "actual": "Lớp này đã có đăng ký đang hoạt động cho lịch đã chọn.",
+        "result": "PASS",
+        "evidence": "same class\/schedule",
+        "executed_at": "2026-10-07 20:28:51"
+    },
+    {
+        "id": "TC-B6-19",
+        "name": "Tranh chấp 1 ghế cuối",
+        "expected": "2 tiến trình đồng thời: đúng 1 thành công",
+        "actual": "success_count=1",
+        "result": "PASS",
+        "evidence": "{\"schedule_id\":1,\"class_a\":2,\"class_b\":3,\"final_capacity\":1,\"worker_a\":{\"ok\":false,\"message\":\"Không đủ chỗ. Chỉ còn 0 chỗ.\"},\"worker_b\":{\"ok\":true,\"registration_id\":28,\"status\":\"pending\",\"hold_expires_at\":\"2026-10-07 20:43:52\"},\"stderr_a\":\"\",\"stderr_b\":\"\"}",
+        "executed_at": "2026-10-07 20:28:52"
+    },
+    {
+        "id": "TC-B6-20",
+        "name": "Kiểm thử SQL Injection ở ô tìm kiếm",
+        "expected": "Không lỗi SQL \/ không HTTP 500",
+        "actual": "HTTP 200",
+        "result": "PASS",
+        "evidence": "keyword=' OR 1=1 --",
+        "executed_at": "2026-10-07 20:28:52"
+    }
+]

@@ -19,11 +19,13 @@ class ClassRegistration extends Model
         'schedule_id',
         'student_count',
         'status',
+        'hold_expires_at',
     ];
 
     protected $casts = [
         'student_count' => 'integer',
         'registered_at' => 'datetime',
+        'hold_expires_at' => 'datetime',
     ];
 
     public function schoolClass(): BelongsTo

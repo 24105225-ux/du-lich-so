@@ -1,0 +1,23 @@
+{
+    "executed_at": "2026-10-07 20:28:52",
+    "pair_class": 2,
+    "pair_schedule": 1,
+    "results": {
+        "schedule_id": 1,
+        "class_a": 2,
+        "class_b": 3,
+        "final_capacity": 1,
+        "worker_a": {
+            "ok": false,
+            "message": "Không đủ chỗ. Chỉ còn 0 chỗ."
+        },
+        "worker_b": {
+            "ok": true,
+            "registration_id": 28,
+            "status": "pending",
+            "hold_expires_at": "2026-10-07 20:43:52"
+        },
+        "stderr_a": "",
+        "stderr_b": ""
+    }
+}
