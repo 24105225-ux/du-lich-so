@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Đăng nhập | Du lịch học đường')
+@section('title', 'Đăng ký | Du lịch học đường')
 
 @section('content')
 <section class="section">
@@ -11,17 +11,16 @@
             </span>
 
             <h1>
-                Đăng nhập hệ thống
+                Đăng ký tài khoản
             </h1>
 
             <p>
-                Sử dụng tài khoản mô phỏng của dự án
-                để truy cập đúng vai trò.
+                Tài khoản đăng ký mới mặc định thuộc vai trò phụ huynh.
             </p>
 
             <form
                 method="POST"
-                action="{{ route('login.store') }}"
+                action="{{ route('register.store') }}"
             >
                 @csrf
 
@@ -35,15 +34,12 @@
                         type="email"
                         name="email"
                         value="{{ old('email') }}"
-                        autocomplete="username"
+                        autocomplete="email"
                         required
                     >
 
                     @error('email')
-                        <p
-                            class="field-error"
-                            role="alert"
-                        >
+                        <p class="field-error" role="alert">
                             {{ $message }}
                         </p>
                     @enderror
@@ -58,32 +54,43 @@
                         id="password"
                         type="password"
                         name="password"
-                        autocomplete="current-password"
+                        autocomplete="new-password"
                         required
                     >
 
                     @error('password')
-                        <p
-                            class="field-error"
-                            role="alert"
-                        >
+                        <p class="field-error" role="alert">
                             {{ $message }}
                         </p>
                     @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="password_confirmation">
+                        Xác nhận mật khẩu
+                    </label>
+
+                    <input
+                        id="password_confirmation"
+                        type="password"
+                        name="password_confirmation"
+                        autocomplete="new-password"
+                        required
+                    >
                 </div>
 
                 <button
                     type="submit"
                     class="button"
                 >
-                    Đăng nhập
+                    Đăng ký
                 </button>
             </form>
 
             <p>
-                Chưa có tài khoản?
-                <a href="{{ route('register') }}">
-                    Đăng ký
+                Đã có tài khoản?
+                <a href="{{ route('login') }}">
+                    Đăng nhập
                 </a>
             </p>
         </div>

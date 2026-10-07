@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\ProgramApiController;
 use App\Http\Controllers\Api\ProgramRecommendationController;
+use App\Http\Controllers\Api\PlaceApiController;
 use App\Http\Controllers\Api\ProgramReviewController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,5 +37,37 @@ Route::prefix('v1')->group(function () {
             '/programs/{program}/reviews',
             [ProgramReviewController::class, 'store']
         );
+
+        Route::middleware('role:admin,organizer')->group(function () {
+            Route::get(
+                '/places',
+                [PlaceApiController::class, 'index']
+            );
+
+            Route::post(
+                '/places',
+                [PlaceApiController::class, 'store']
+            );
+
+            Route::get(
+                '/places/{place}',
+                [PlaceApiController::class, 'show']
+            );
+
+            Route::put(
+                '/places/{place}',
+                [PlaceApiController::class, 'update']
+            );
+
+            Route::patch(
+                '/places/{place}',
+                [PlaceApiController::class, 'update']
+            );
+
+            Route::delete(
+                '/places/{place}',
+                [PlaceApiController::class, 'destroy']
+            );
+        });
     });
 });

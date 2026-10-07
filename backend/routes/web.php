@@ -29,6 +29,18 @@ Route::get(
     [AuthController::class, 'create']
 )->name('login');
 
+Route::get(
+    '/dang-ky',
+    [AuthController::class, 'register']
+)->name('register');
+
+Route::post(
+    '/dang-ky',
+    [AuthController::class, 'registerStore']
+)
+    ->middleware('throttle:5,1')
+    ->name('register.store');
+
 Route::post(
     '/dang-nhap',
     [AuthController::class, 'store']

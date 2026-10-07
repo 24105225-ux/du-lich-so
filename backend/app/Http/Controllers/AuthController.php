@@ -3,18 +3,59 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Models\User;
+use App\Services\AuditLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\View\View;
-use App\Services\AuditLogService;
 
 class AuthController extends Controller
 {
     public function __construct(private AuditLogService $auditLogs)
     {
+    }
+
+    public function register(): View
+    {
+        return view('auth.register');
+    }
+
+    public function registerStore(
+        RegisterRequest $request
+    ): RedirectResponse {
+        $validated = $request->validated();
+
+        $user = User::create([
+            'email' => $validated['email'],
+            'password_hash' => Hash::make(
+                $validated['password']
+            ),
+            'role' => 'parent',
+            'status' => 'active',
+        ]);
+
+        $this->auditLogs->record(
+            $request,
+            'REGISTER',
+            'user',
+            $user->id,
+            null,
+            [
+                'role' => $user->role,
+                'status' => $user->status,
+            ],
+        );
+
+        return redirect()
+            ->route('login')
+            ->with(
+                'status',
+                'Đăng ký tài khoản thành công. Vui lòng đăng nhập.'
+            );
     }
 
     public function create(): View
@@ -64,7 +105,14 @@ class AuthController extends Controller
 
         if ($user) {
             $user->forceFill(['last_login_at' => now()])->save();
-            $this->auditLogs->record($request, 'LOGIN', 'user', $user->id, null, ['role' => $user->role]);
+            $this->auditLogs->record(
+                $request,
+                'LOGIN',
+                'user',
+                $user->id,
+                null,
+                ['role' => $user->role]
+            );
         }
 
         if (
@@ -90,8 +138,14 @@ class AuthController extends Controller
         Request $request
     ): RedirectResponse {
         $user = $request->user();
+
         if ($user) {
-            $this->auditLogs->record($request, 'LOGOUT', 'user', $user->id);
+            $this->auditLogs->record(
+                $request,
+                'LOGOUT',
+                'user',
+                $user->id
+            );
         }
 
         Auth::logout();
