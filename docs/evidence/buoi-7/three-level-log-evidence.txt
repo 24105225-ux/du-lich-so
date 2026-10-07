@@ -1,0 +1,6 @@
+﻿D:\du-lich-so\backend\storage\logs\laravel.log:24102:[2026-10-07 20:45:27] local.DEBUG: M3_LOG_DEBUG_TEST {"source":"B7"} 
+D:\du-lich-so\backend\storage\logs\laravel.log:24103:[2026-10-07 20:45:27] local.INFO: M3_LOG_INFO_TEST {"source":"B7"} 
+D:\du-lich-so\backend\storage\logs\laravel.log:24104:[2026-10-07 20:45:27] local.WARNING: M3_LOG_WARNING_TEST {"source":"B7"} 
+D:\du-lich-so\backend\storage\logs\laravel.log:24123:[2026-10-07 20:48:29] local.DEBUG: M3_LOG_DEBUG_TEST {"source":"B7"} 
+D:\du-lich-so\backend\storage\logs\laravel.log:24124:[2026-10-07 20:48:29] local.INFO: M3_LOG_INFO_TEST {"source":"B7"} 
+D:\du-lich-so\backend\storage\logs\laravel.log:24125:[2026-10-07 20:48:29] local.WARNING: M3_LOG_WARNING_TEST {"source":"B7"} 

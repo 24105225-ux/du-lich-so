@@ -1,0 +1,5 @@
+﻿{
+  "login_http": "200",
+  "dashboard_guest_http": "302",
+  "expected_dashboard_guest": "302"
+}

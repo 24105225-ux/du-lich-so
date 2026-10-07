@@ -133,3 +133,52 @@ Route::middleware('auth')->group(function () {
             )->name('organizer.dashboard');
         });
 });
+
+/*
+|--------------------------------------------------------------------------
+| M3_PAYMENT_AND_DASHBOARD_ROUTES
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+
+    Route::get(
+        '/thanh-toan-thu/tao/{registration}',
+        [\App\Http\Controllers\TrialPaymentController::class, 'createFromRegistration']
+    )->name('trial-payments.create');
+
+    Route::get(
+        '/thanh-toan-thu/{order}',
+        [\App\Http\Controllers\TrialPaymentController::class, 'show']
+    )->name('trial-payments.show');
+
+    Route::post(
+        '/thanh-toan-thu/{order}/success',
+        [\App\Http\Controllers\TrialPaymentController::class, 'success']
+    )->name('trial-payments.success');
+
+    Route::post(
+        '/thanh-toan-thu/{order}/cancel',
+        [\App\Http\Controllers\TrialPaymentController::class, 'cancel']
+    )->name('trial-payments.cancel');
+
+    Route::post(
+        '/thanh-toan-thu/{order}/failed',
+        [\App\Http\Controllers\TrialPaymentController::class, 'failed']
+    )->name('trial-payments.failed');
+
+    Route::post(
+        '/thanh-toan-thu/{order}/refund',
+        [\App\Http\Controllers\TrialPaymentController::class, 'refund']
+    )->name('trial-payments.refund');
+
+    Route::get(
+        '/admin/m3-dashboard',
+        [\App\Http\Controllers\M3AdminDashboardController::class, 'index']
+    )->name('m3-admin-dashboard.index');
+
+    Route::get(
+        '/admin/m3-dashboard/export',
+        [\App\Http\Controllers\M3AdminDashboardController::class, 'export']
+    )->name('m3-admin-dashboard.export');
+});

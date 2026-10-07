@@ -1,0 +1,42 @@
+[
+    {
+        "id": "TC-B7-01",
+        "name": "Thanh toán thử nghiệm thành công",
+        "result": "PASS",
+        "actual": "order_status=paid; success_payments=1; registration_status=approved",
+        "evidence": "Order #22",
+        "executed_at": "2026-10-07 20:52:03"
+    },
+    {
+        "id": "TC-B7-02",
+        "name": "Hủy giao dịch không làm sai inventory",
+        "result": "PASS",
+        "actual": "payment=cancelled; order=pending; registration=pending",
+        "evidence": "Inventory remains reserved only by pending hold.",
+        "executed_at": "2026-10-07 20:52:03"
+    },
+    {
+        "id": "TC-B7-03",
+        "name": "Từ chối refund trước thanh toán",
+        "result": "PASS",
+        "actual": "rejected: Chỉ được hoàn tiền sau khi thanh toán thành công.",
+        "evidence": "State machine",
+        "executed_at": "2026-10-07 20:52:03"
+    },
+    {
+        "id": "TC-B7-04",
+        "name": "Python stop -> fallback, không 500",
+        "result": "PASS",
+        "actual": "source=fallback",
+        "evidence": "PY_SERVICE_URL=127.0.0.1:8999",
+        "executed_at": "2026-10-07 20:52:03"
+    },
+    {
+        "id": "TC-B7-05",
+        "name": "Admin dashboard 4 KPI + 2 chart datasets",
+        "result": "PASS",
+        "actual": "keys=total,paid,pending,revenue,statusChart,dailyRevenue",
+        "evidence": "dashboardMetrics()",
+        "executed_at": "2026-10-07 20:52:03"
+    }
+]

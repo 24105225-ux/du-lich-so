@@ -1,0 +1,5 @@
+﻿=== B7 DATABASE BACKUP ===
+START  2026-10-07 20:48:26
+FILE   .\database\backups\dulichso-b7-20261007-204826.sql
+OPTION --no-tablespaces
+SUCCESS 2026-10-07 20:48:27
