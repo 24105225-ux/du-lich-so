@@ -7,9 +7,14 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
+use App\Services\AuditLogService;
 
 class PasswordController extends Controller
 {
+    public function __construct(private AuditLogService $auditLogs)
+    {
+    }
+
     public function edit(): View
     {
         return view('auth.password');
@@ -48,6 +53,8 @@ class PasswordController extends Controller
         );
 
         $request->session()->regenerate();
+
+        $this->auditLogs->record($request, 'CHANGE_PASSWORD', 'user', $user->id);
 
         return back()->with(
             'status',

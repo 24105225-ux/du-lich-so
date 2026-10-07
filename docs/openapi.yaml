@@ -1,86 +1,70 @@
 openapi: 3.0.3
-
 info:
   title: API Du Lich Hoc Duong CSE703073
-  description: API cho nền tảng du lịch học đường ĐT-17
   version: 1.0.0
-
+  description: API cho nền tảng du lịch học đường ĐT-17
 servers:
   - url: http://127.0.0.1:8000
-
 paths:
+  /api/v1/csrf-token:
+    get:
+      summary: Lấy CSRF token cho SPA
+      responses:
+        '200': {description: OK}
   /api/v1/programs:
     get:
-      summary: Danh sách chương trình trải nghiệm
+      summary: Danh sách chương trình
       parameters:
-        - name: keyword
-          in: query
-          schema:
-            type: string
-
-        - name: education_level
-          in: query
-          schema:
-            type: string
-            enum:
-              - TH
-              - THCS
-              - THPT
-
-        - name: min_price
-          in: query
-          schema:
-            type: number
-            minimum: 0
-
-        - name: max_price
-          in: query
-          schema:
-            type: number
-            minimum: 0
-
-        - name: sort
-          in: query
-          schema:
-            type: string
-            enum:
-              - newest
-              - price_asc
-              - price_desc
-
-        - name: page
-          in: query
-          schema:
-            type: integer
-            default: 1
-
-        - name: per_page
-          in: query
-          schema:
-            type: integer
-            default: 9
-
+        - {name: keyword, in: query, schema: {type: string}}
+        - {name: education_level, in: query, schema: {type: string, enum: [Tieu hoc, THCS, THPT]}}
+        - {name: min_price, in: query, schema: {type: number, minimum: 0}}
+        - {name: max_price, in: query, schema: {type: number, minimum: 0}}
+        - {name: sort, in: query, schema: {type: string, enum: [newest, price_asc, price_desc]}}
+        - {name: per_page, in: query, schema: {type: integer, minimum: 1, maximum: 50, default: 9}}
       responses:
-        "200":
-          description: Danh sách chương trình thành công
-
-        "422":
-          description: Tham số không hợp lệ
-
+        '200': {description: OK}
+        '422': {description: Invalid query}
   /api/v1/programs/{program}:
     get:
       summary: Chi tiết chương trình
-
       parameters:
-        - name: program
-          in: path
-          required: true
-          schema:
-            type: integer
-
+        - {name: program, in: path, required: true, schema: {type: integer}}
       responses:
-        "200":
-          description: Chi tiết chương trình
-
-        "404":
-          description: Không tìm thấy chương trình
+        '200': {description: OK}
+        '404': {description: Not found}
+  /api/v1/programs/{program}/recommend:
+    get:
+      summary: Gợi ý chương trình từ Python
+      parameters:
+        - {name: program, in: path, required: true, schema: {type: integer}}
+      responses:
+        '200': {description: OK}
+  /api/v1/me:
+    get:
+      summary: Người dùng hiện tại
+      responses:
+        '200': {description: Authenticated}
+        '401': {description: Unauthenticated}
+  /api/v1/programs/{program}/review-eligibility:
+    get:
+      summary: Kiểm tra điều kiện đánh giá
+      responses:
+        '200': {description: OK}
+        '401': {description: Unauthenticated}
+  /api/v1/programs/{program}/reviews:
+    post:
+      summary: Tạo đánh giá
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rating]
+              properties:
+                rating: {type: integer, minimum: 1, maximum: 5}
+                comment: {type: string, maxLength: 2000}
+      responses:
+        '201': {description: Created}
+        '403': {description: Not eligible or already reviewed}
+        '419': {description: CSRF token mismatch}

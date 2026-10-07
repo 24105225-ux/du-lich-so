@@ -1,77 +1,38 @@
-# Nền tảng du lịch học đường — CSE703073
+# Nền tảng du lịch học đường — CSE703073 — ĐT-17
 
 ## 1. Thông tin dự án
 
 - Học phần: CSE703073 – Lập trình ứng dụng web trong du lịch 2
-- Mã đề tài: ĐT-17
-- Tên đề tài: Nền tảng du lịch học đường và chương trình trải nghiệm giáo dục
-- Tên nhóm: <ĐIỀN THÔNG TIN THẬT CỦA BẠN>
-- Lớp: <ĐIỀN THÔNG TIN THẬT CỦA BẠN>
+- Đề tài: ĐT-17 – Nền tảng du lịch học đường và chương trình trải nghiệm giáo dục
 - Giảng viên: TS. Nguyễn Văn Tánh
+- Dữ liệu học sinh trong repo là dữ liệu mô phỏng phục vụ học tập.
 
-## 2. Bối cảnh
+## 2. Công nghệ thực tế trong repo
 
-Nền tảng hỗ trợ quản lý các chương trình du lịch học đường
-với trọng tâm về tính giáo dục, an toàn và thủ tục hành chính.
+- Backend: PHP 8.3 + Laravel 12
+- Database: MySQL 8.x
+- Frontend: Vue 3 + Vite
+- CSS: CSS variables + responsive CSS
+- Python: Python 3.12 + pandas + scikit-learn + FastAPI
+- Web server: Nginx 1.24 configuration có sẵn cho production
+- Container: Docker + Docker Compose cho môi trường phát triển
 
-Hệ thống mô hình hóa ba nhóm người dùng chính:
+## 3. Kiến trúc
 
-- Nhà trường
-- Phụ huynh
-- Đơn vị tổ chức
+```text
+Vue 3 / Vite
+     │ /api
+     ▼
+Laravel 12 ──────► MySQL
+     │
+     │ HTTP
+     ▼
+FastAPI / Python
+     │
+     └────────────► MySQL
+```
 
-## 3. Phạm vi chức năng
-
-- Danh mục chương trình trải nghiệm.
-- Gắn chương trình với cấp học.
-- Gắn chương trình với môn học.
-- Đăng ký theo lớp.
-- Thu thập phiếu đồng ý của phụ huynh.
-- Quản lý danh sách học sinh.
-- Quản lý thông tin y tế cơ bản.
-- Phân công giáo viên phụ trách.
-- Điểm danh theo chặng.
-- Thông báo cho phụ huynh trong hành trình.
-- Đánh giá kết quả học tập sau chuyến đi.
-- Hồ sơ an toàn của chương trình.
-
-## 4. Kiến trúc công nghệ
-
-Frontend:
-Vue 3 + Vite
-
-Backend:
-PHP 8.3 + Laravel 11
-
-Database:
-MySQL 8.0
-
-Data Processing:
-Python 3.12 + pandas + scikit-learn + FastAPI
-
-Web Server:
-Nginx 1.24
-
-Container:
-Docker + Docker Compose
-
-## 5. Sơ đồ kiến trúc
-
-<BỔ SUNG ẢNH>
-
-Ảnh kiến trúc:
-docs/architecture.png
-
-## 6. Môi trường yêu cầu
-
-- PHP >= 8.2
-- Composer >= 2.7
-- MySQL >= 8.0
-- Node.js >= 20
-- Python >= 3.11
-- Docker >= 24
-
-## 7. Cấu trúc dự án
+## 4. Cấu trúc
 
 ```text
 du-lich-so/
@@ -85,32 +46,75 @@ du-lich-so/
 ├── docker-compose.yml
 ├── .env.example
 ├── .gitignore
-├── .gitattributes
-├── .editorconfig
 └── README.md
+```
 
-## 8. Tài khoản kiểm thử
-| Vai trò        | Tài khoản                     | Mật khẩu                          |
-| -------------- | ----------------------------- | --------------------------------- |
-| Quản trị       | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <KHÔNG ĐƯA MẬT KHẨU THẬT VÀO GIT> |
-| Nhà trường     | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <THÔNG TIN MÔ PHỎNG>              |
-| Phụ huynh      | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <THÔNG TIN MÔ PHỎNG>              |
-| Đơn vị tổ chức | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <THÔNG TIN MÔ PHỎNG>              |
+## 5. Chạy local bằng PowerShell
 
-## 9. Thành viên và phân công
-| Họ tên                        | MSSV                          | Email                         | Vai trò                       | Phạm vi                       |
-| ----------------------------- | ----------------------------- | ----------------------------- | ----------------------------- | ----------------------------- |
-| <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> |
-| <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> |
-| <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> |
-| <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> |
-| <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> | <ĐIỀN THÔNG TIN THẬT CỦA BẠN> |
+### Backend
 
-## 10. Dữ liệu
-Toàn bộ dữ liệu học sinh sử dụng trong hệ thống là dữ liệu mô phỏng.
+```powershell
+Set-Location .\backend
+php artisan serve --host=127.0.0.1 --port=8000
+```
 
-Không sử dụng dữ liệu học sinh thật.
+### Frontend Vue
 
-## 11. Git Workflow
+```powershell
+Set-Location .\frontend
+npm install
+npm run dev
+```
 
-![Git Workflow](docs/git-workflow.png)
+Các trang Blade của Laravel dùng asset tĩnh trong `backend/public/assets`, vì vậy không cần chạy thêm Vite cho backend khi kiểm tra `/dang-nhap` hoặc `/dashboard`.
+
+### Python
+
+```powershell
+Set-Location .\python-service
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8001
+```
+
+### Database
+
+Import `database/schema.sql`, sau đó `database/seed.sql`. Tạo tài khoản ứng dụng bằng `database/create_app_user.sql`.
+
+## 6. Tài khoản mô phỏng
+
+`database/seed.sql` dùng dữ liệu học tập mô phỏng. Mật khẩu kiểm thử của các tài khoản seed là `ChangeMe123!`; không dùng mật khẩu này cho môi trường thật.
+
+## 6. Docker Compose
+
+```powershell
+docker compose up --build
+```
+
+Gateway Nginx dùng cổng 8080; service riêng vẫn có thể kiểm tra ở 8000, 8001, 5173 và 3306.
+
+## 7. API kiểm tra nhanh
+
+```text
+GET http://127.0.0.1:8000/api/v1/programs
+GET http://127.0.0.1:8000/api/v1/programs/1
+GET http://127.0.0.1:8000/api/v1/programs/1/recommend
+GET http://127.0.0.1:8001/healthz
+GET http://127.0.0.1:8001/recommend/1?k=6
+```
+
+## 8. Git và thông tin nhóm
+
+Thông tin thành viên, lớp và phân chia nhiệm vụ không được tự điền trong source để tránh tạo dữ liệu cá nhân giả. Điền theo hồ sơ nhóm trước khi nộp.
+
+## 9. Tài liệu
+
+- `00_INFO.md`: yêu cầu và stack
+- `docs/PHAN_I_TONG_QUAN.md`: Phần I
+- `docs/data_dictionary.md`: từ điển dữ liệu
+- `docs/openapi.yaml`: API
+- `docs/owasp-top10.md`: rà soát bảo mật
+- `docs/part-v-architecture.png`: kiến trúc
+- `docs/part-vi-security.png`: bảo mật
+- `docs/part-vii-frontend.png`: Frontend
+- `docs/part-viii-python.png`: Python Data Service

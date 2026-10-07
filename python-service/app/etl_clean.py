@@ -1,4 +1,4 @@
-﻿# D:\CODE\du-lich-so\python-service\app\etl_clean.py
+# D:\CODE\du-lich-so\python-service\app\etl_clean.py
 
 """
 Thu thập và làm sạch dữ liệu địa điểm trải nghiệm cho đề tài DT-17.
@@ -40,7 +40,7 @@ from sqlalchemy import create_engine, text
 SERVICE_ROOT = Path(__file__).resolve().parents[1]
 PROJECT_ROOT = SERVICE_ROOT.parent
 
-load_dotenv(PROJECT_ROOT / "backend" / ".env")
+load_dotenv(PROJECT_ROOT / "backend" / ".env")  # dùng chung cấu hình DB của Laravel
 
 logging.basicConfig(
     level=logging.INFO,

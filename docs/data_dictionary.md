@@ -154,7 +154,8 @@ Danh sách điểm dừng theo thứ tự của một lịch.
 
 ## 17. class_registrations
 
-Đăng ký chương trình theo lớp.
+Đăng ký chương trình theo lớp. Ngoài mã lớp và lịch, `student_count` lưu số học sinh đăng ký; giá trị phải lớn hơn 0 và không vượt sĩ số thực tế khi Service xử lý.
+
 
 ## 18. parent_consents
 
@@ -187,3 +188,19 @@ Hồ sơ an toàn của từng lịch trải nghiệm.
 ## 25. audit_logs
 
 Ghi vết thao tác quản trị.
+
+## 26. program_reviews
+
+| Trường | Kiểu | Bắt buộc | Khóa | Ý nghĩa |
+|---|---|---|---|---|
+| id | BIGINT UNSIGNED | Có | PK | Mã đánh giá |
+| program_id | BIGINT UNSIGNED | Có | FK | Chương trình được đánh giá |
+| user_id | BIGINT UNSIGNED | Có | FK | Tài khoản phụ huynh thực hiện đánh giá |
+| rating | TINYINT UNSIGNED | Có | | 1–5 sao |
+| comment | TEXT | Không | | Nhận xét |
+| created_at | TIMESTAMP | Có | | Thời điểm tạo |
+| updated_at | TIMESTAMP | Có | | Thời điểm cập nhật |
+
+## Framework tables
+
+Laravel sử dụng thêm `sessions`, `cache`, `cache_locks` và `personal_access_tokens`. Các bảng này không được tính vào số thực thể nghiệp vụ ĐT-17 nhưng được tạo sẵn trong `database/schema.sql` để môi trường sạch chạy được.

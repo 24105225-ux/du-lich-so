@@ -26,7 +26,7 @@ class ProgramApiController extends Controller
 
             'education_level' => [
                 'nullable',
-                'in:TH,THCS,THPT',
+                'in:Tieu hoc,THCS,THPT',
             ],
 
             'min_price' => [

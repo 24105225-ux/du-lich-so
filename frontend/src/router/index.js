@@ -75,7 +75,7 @@ router.beforeEach(
                     }
                 );
 
-            if (response.ok) {
+            if (response.ok && response.headers.get("content-type")?.includes("application/json")) {
                 return true;
             }
         } catch {

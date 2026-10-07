@@ -1,0 +1,85 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: dulichso
+    ports: ["3306:3306"]
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+      - ./docker/mysql/01-user.sql:/docker-entrypoint-initdb.d/03-user.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  python:
+    build:
+      context: .
+      dockerfile: docker/python/Dockerfile
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: dulichso
+      DB_USERNAME: dulichso_app
+      DB_PASSWORD: ""
+      PY_SERVICE_TOKEN: ""
+    ports: ["8001:8001"]
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    environment:
+      APP_NAME: "Du lich so CSE703073"
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://127.0.0.1:8080
+      APP_TIMEZONE: Asia/Ho_Chi_Minh
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: dulichso
+      DB_USERNAME: dulichso_app
+      DB_PASSWORD: ""
+      SESSION_DRIVER: database
+      SESSION_ENCRYPT: "true"
+      SESSION_SECURE_COOKIE: "false"
+      SESSION_SAME_SITE: lax
+      PY_SERVICE_URL: http://python:8001
+      PY_SERVICE_TOKEN: ""
+    ports: ["8000:8000"]
+    depends_on:
+      mysql:
+        condition: service_healthy
+      python:
+        condition: service_started
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    environment:
+      VITE_BACKEND_URL: http://127.0.0.1:8080
+      VITE_TEAM_NAME: Nhom CSE703073
+    ports: ["5173:5173"]
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:1.24-alpine
+    ports: ["8080:80"]
+    volumes:
+      - ./docker/nginx-dev.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  mysql_data:

@@ -1,0 +1,4 @@
+CREATE DATABASE IF NOT EXISTS dulichso CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER IF NOT EXISTS 'dulichso_app'@'%' IDENTIFIED BY '';
+GRANT ALL PRIVILEGES ON dulichso.* TO 'dulichso_app'@'%';
+FLUSH PRIVILEGES;

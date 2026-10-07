@@ -7,11 +7,11 @@
 ## Công nghệ tham chiếu
 
 PHP 8.3
-Laravel 11
-MySQL 8.0
+Laravel 12
+MySQL 8.x
 Vue 3
 Vite
-Bootstrap 5.3
+CSS variables + responsive CSS
 Python 3.12
 pandas
 scikit-learn
@@ -61,8 +61,8 @@ Toàn bộ dữ liệu học sinh sử dụng trong hệ thống là dữ liệu
 
 Không sử dụng dữ liệu cá nhân thật.
 
-< BỔ SUNG ẢNH >
+Hình kiến trúc tổng thể: `docs/part-v-architecture.png`.
 Hình kiến trúc tổng thể hệ thống sẽ bổ sung ở giai đoạn thiết kế kiến trúc.
 
-< BỔ SUNG AUDIO >
+Audio phục vụ video minh chứng cuối dự án, không nằm trong source code.
 Không áp dụng riêng cho Phần I. Audio phục vụ video minh chứng cuối dự án.

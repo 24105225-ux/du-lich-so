@@ -90,13 +90,17 @@ class ProgramResource extends JsonResource
                                                         $stop
                                                     ) {
                                                         return [
-                                                            'day' =>
-                                                                $stop
-                                                                    ->day_no,
-
                                                             'sequence' =>
                                                                 $stop
                                                                     ->seq_no,
+
+                                                            'activity' =>
+                                                                $stop
+                                                                    ->activity,
+
+                                                            'duration_minutes' =>
+                                                                $stop
+                                                                    ->duration_minutes,
 
                                                             'place' =>
                                                                 $stop
@@ -108,9 +112,7 @@ class ProgramResource extends JsonResource
                                                                     ->place
                                                                     ?->province,
 
-                                                            'note' =>
-                                                                $stop
-                                                                    ->note,
+
                                                         ];
                                                     }
                                                 )

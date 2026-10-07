@@ -251,7 +251,7 @@ onMounted(
                                     Tất cả
                                 </option>
 
-                                <option value="TH">
+                                <option value="Tieu hoc">
                                     Tiểu học
                                 </option>
 

@@ -126,8 +126,7 @@
                                         class="timeline__item"
                                     >
                                         <strong>
-                                            Ngày {{ $stop->day_no }}
-                                            · điểm
+                                            Điểm
                                             {{ $stop->seq_no }}
                                         </strong>
 
@@ -139,10 +138,9 @@
                                             {{ $stop->place?->province }}
                                         </small>
 
-                                        @if ($stop->note)
-                                            <p>
-                                                {{ $stop->note }}
-                                            </p>
+                                        <p>{{ $stop->activity }}</p>
+                                        @if ($stop->duration_minutes)
+                                            <small>{{ $stop->duration_minutes }} phút</small>
                                         @endif
                                     </div>
                                 @endforeach
@@ -166,6 +164,11 @@
                         {{ $program->organizer?->name }}
                     </p>
 
+                    <div class="cancellation-policy" style="margin:16px 0; padding:14px; border:1px solid var(--border); border-radius:var(--radius);">
+                        <strong>Chính sách hủy</strong>
+                        <p>Việc hủy hoặc thay đổi đăng ký thực hiện theo thời hạn chốt danh sách của nhà trường và đơn vị tổ chức.</p>
+                    </div>
+
                     <a
                         class="button"
                         href="{{ route(
@@ -174,9 +177,35 @@
                     >
                         Đăng ký theo lớp
                     </a>
+
+                    <div style="margin-top:16px; padding:14px; border:1px solid var(--border); border-radius:var(--radius);">
+                        <strong>Đánh giá</strong>
+                        <p>Chỉ người đã thực sự tham gia chuyến đi mới được đánh giá. Việc kiểm tra điều kiện và gửi đánh giá được thực hiện ở giao diện Vue/API của hệ thống.</p>
+                    </div>
                 </div>
             </aside>
         </div>
+
+        @if (!empty($recommendations['items']))
+            <section class="content-section">
+                <h2>Chương trình tương tự</h2>
+                <div class="card-grid">
+                    @foreach ($recommendations['items'] as $item)
+                        <article class="card">
+                            <div class="card__body">
+                                <span class="badge">{{ $item['education_level'] ?? 'Chương trình' }}</span>
+                                <h3 class="card__title">{{ $item['title'] ?? 'Chương trình gợi ý' }}</h3>
+                                <p>Chi phí: <strong>{{ number_format((float)($item['price_per_student'] ?? 0), 0, ',', '.') }} đ/học sinh</strong></p>
+                                @if (isset($item['similarity']))
+                                    <p class="muted">Độ tương đồng: {{ number_format((float)$item['similarity'] * 100, 1) }}%</p>
+                                @endif
+                                <a class="button" href="{{ route('programs.show', $item['program_id']) }}">Xem chương trình</a>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+            </section>
+        @endif
     </div>
 </section>
 @endsection

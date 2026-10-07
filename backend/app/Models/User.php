@@ -9,27 +9,23 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    public const UPDATED_AT = null;
+
     protected $table = 'users';
 
-    public $timestamps = false;
-
     protected $fillable = [
-        'email',
-        'password_hash',
-        'role',
+        'email', 'password_hash', 'role', 'status', 'last_login_at',
     ];
 
-    protected $hidden = [
-        'password_hash',
+    protected $hidden = ['password_hash'];
+
+    protected $casts = [
+        'last_login_at' => 'datetime',
     ];
 
     public function getAuthPasswordName(): string
-    {
-        return 'password_hash';
-    }
+    { return 'password_hash'; }
 
     public function getAuthPassword(): string
-    {
-        return (string) $this->password_hash;
-    }
+    { return (string) $this->password_hash; }
 }

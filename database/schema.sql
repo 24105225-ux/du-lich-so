@@ -12,7 +12,12 @@ USE dulichso;
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS program_reviews;
 DROP TABLE IF EXISTS audit_logs;
+DROP TABLE IF EXISTS personal_access_tokens;
+DROP TABLE IF EXISTS cache_locks;
+DROP TABLE IF EXISTS cache;
+DROP TABLE IF EXISTS sessions;
 DROP TABLE IF EXISTS safety_profiles;
 DROP TABLE IF EXISTS learning_evaluations;
 DROP TABLE IF EXISTS parent_notifications;
@@ -439,6 +444,7 @@ CREATE TABLE class_registrations (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     class_id BIGINT UNSIGNED NOT NULL,
     schedule_id BIGINT UNSIGNED NOT NULL,
+    student_count SMALLINT UNSIGNED NOT NULL DEFAULT 0,
     status ENUM('pending', 'approved', 'cancelled', 'completed')
         NOT NULL DEFAULT 'pending',
     registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -732,18 +738,78 @@ CREATE TABLE audit_logs (
     )
 ) ENGINE=InnoDB;
 
-SET FOREIGN_KEY_CHECKS = 1;
+-- =========================================================
+-- 26. PROGRAM REVIEWS
+-- =========================================================
 
-CREATE TABLE IF NOT EXISTS program_reviews (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE program_reviews (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     program_id BIGINT UNSIGNED NOT NULL,
     user_id BIGINT UNSIGNED NOT NULL,
     rating TINYINT UNSIGNED NOT NULL,
     comment TEXT NULL,
-    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_program_reviews_program
+        FOREIGN KEY (program_id)
+        REFERENCES programs(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_program_reviews_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT chk_program_reviews_rating
+        CHECK (rating BETWEEN 1 AND 5),
+
     UNIQUE KEY uq_program_user (program_id, user_id),
-    KEY idx_program_reviews_program (program_id),
-    KEY idx_program_reviews_user (user_id)
-);
+    INDEX idx_program_reviews_program (program_id),
+    INDEX idx_program_reviews_user (user_id)
+) ENGINE=InnoDB;
+
+-- =========================================================
+-- FRAMEWORK TABLES USED BY LARAVEL
+-- =========================================================
+
+CREATE TABLE sessions (
+    id VARCHAR(255) PRIMARY KEY,
+    user_id BIGINT UNSIGNED NULL,
+    ip_address VARCHAR(45) NULL,
+    user_agent TEXT NULL,
+    payload LONGTEXT NOT NULL,
+    last_activity INT NOT NULL,
+    INDEX idx_sessions_user_id (user_id),
+    INDEX idx_sessions_last_activity (last_activity)
+) ENGINE=InnoDB;
+
+CREATE TABLE cache (
+    `key` VARCHAR(255) PRIMARY KEY,
+    value MEDIUMTEXT NOT NULL,
+    expiration INT NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE cache_locks (
+    `key` VARCHAR(255) PRIMARY KEY,
+    owner VARCHAR(255) NOT NULL,
+    expiration INT NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE personal_access_tokens (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    tokenable_type VARCHAR(255) NOT NULL,
+    tokenable_id BIGINT UNSIGNED NOT NULL,
+    name TEXT NOT NULL,
+    token VARCHAR(64) NOT NULL UNIQUE,
+    abilities TEXT NULL,
+    last_used_at TIMESTAMP NULL,
+    expires_at TIMESTAMP NULL,
+    created_at TIMESTAMP NULL,
+    updated_at TIMESTAMP NULL,
+    INDEX idx_personal_access_tokens_expires_at (expires_at),
+    INDEX idx_personal_access_tokens_tokenable (tokenable_type, tokenable_id),
+    INDEX idx_personal_access_tokens_expires_at (expires_at)
+) ENGINE=InnoDB;
+
+SET FOREIGN_KEY_CHECKS = 1;

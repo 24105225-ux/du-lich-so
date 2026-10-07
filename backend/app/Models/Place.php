@@ -7,23 +7,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Place extends Model
 {
+    public const UPDATED_AT = null;
+
     protected $fillable = [
-        'code',
-        'name',
-        'province',
-        'place_type',
-        'latitude',
-        'longitude',
-        'source_note',
+        'name', 'province', 'lat', 'lng', 'best_season',
+        'visit_minutes', 'description', 'source_note',
     ];
 
     protected $casts = [
-        'latitude' => 'decimal:7',
-        'longitude' => 'decimal:7',
+        'lat' => 'decimal:7',
+        'lng' => 'decimal:7',
+        'visit_minutes' => 'integer',
     ];
 
     public function scheduleStops(): HasMany
-    {
-        return $this->hasMany(ScheduleStop::class);
-    }
+    { return $this->hasMany(ScheduleStop::class, 'place_id'); }
 }

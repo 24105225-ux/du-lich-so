@@ -88,6 +88,7 @@ notifications: list[str] = []
 evaluations: list[str] = []
 safety_profiles: list[str] = []
 audit_logs: list[str] = []
+program_reviews: list[str] = []
 
 
 # ---------------------------------------------------------
@@ -554,9 +555,9 @@ for class_id in range(1, 13):
 
         registrations.append(
             "INSERT INTO class_registrations "
-            "(id,class_id,schedule_id,status) VALUES "
+            "(id,class_id,schedule_id,student_count,status) VALUES "
             f"({registration_id},{class_id},"
-            f"{schedule_target},'approved');"
+            f"{schedule_target},10,'approved');"
         )
 
 
@@ -805,8 +806,26 @@ for audit_id in range(1, 201):
     )
 
 
+
+
 # ---------------------------------------------------------
-# 24. Write SQL file
+# 24. Program reviews
+# ---------------------------------------------------------
+
+for review_id in range(1, 31):
+    program_ref = review_id
+    parent_user_id = review_id + 4
+    rating = 3 + (review_id % 3)
+
+    program_reviews.append(
+        "INSERT INTO program_reviews "
+        "(id,program_id,user_id,rating,comment) VALUES "
+        f"({review_id},{program_ref},{parent_user_id},"
+        f"{rating},'Danh gia mo phong cho chuong trinh {program_ref:03d}.');"
+    )
+
+# ---------------------------------------------------------
+# 25. Write SQL file
 # ---------------------------------------------------------
 
 sql_lines = [
@@ -840,6 +859,7 @@ sections = [
     evaluations,
     safety_profiles,
     audit_logs,
+    program_reviews,
 ]
 
 for section in sections:
@@ -878,3 +898,4 @@ print("Notifications:", len(notifications))
 print("Evaluations:", len(evaluations))
 print("Safety profiles:", len(safety_profiles))
 print("Audit logs:", len(audit_logs))
+print("Program reviews:", len(program_reviews))

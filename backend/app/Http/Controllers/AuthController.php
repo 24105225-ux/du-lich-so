@@ -9,9 +9,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\View\View;
+use App\Services\AuditLogService;
 
 class AuthController extends Controller
 {
+    public function __construct(private AuditLogService $auditLogs)
+    {
+    }
+
     public function create(): View
     {
         return view('auth.login');
@@ -57,6 +62,11 @@ class AuthController extends Controller
 
         $user = $request->user();
 
+        if ($user) {
+            $user->forceFill(['last_login_at' => now()])->save();
+            $this->auditLogs->record($request, 'LOGIN', 'user', $user->id, null, ['role' => $user->role]);
+        }
+
         if (
             $user &&
             Hash::needsRehash(
@@ -79,6 +89,11 @@ class AuthController extends Controller
     public function destroy(
         Request $request
     ): RedirectResponse {
+        $user = $request->user();
+        if ($user) {
+            $this->auditLogs->record($request, 'LOGOUT', 'user', $user->id);
+        }
+
         Auth::logout();
 
         $request->session()->invalidate();

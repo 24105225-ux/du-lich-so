@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Program;
 use App\Services\ProgramCatalogService;
+use App\Services\PythonDataService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ProgramController extends Controller
 {
     public function __construct(
-        private ProgramCatalogService $catalog
+        private ProgramCatalogService $catalog,
+        private PythonDataService $pythonData
     ) {
     }
 
@@ -25,7 +27,7 @@ class ProgramController extends Controller
 
             'education_level' => [
                 'nullable',
-                'in:TH,THCS,THPT',
+                'in:Tieu hoc,THCS,THPT',
             ],
 
             'min_price' => [
@@ -64,8 +66,11 @@ class ProgramController extends Controller
             $program
         );
 
+        $recommendations = $this->pythonData->recommend($program->id, 6);
+
         return view('programs.show', [
             'program' => $program,
+            'recommendations' => $recommendations,
         ]);
     }
 }

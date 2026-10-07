@@ -36,7 +36,7 @@ def thong_ke_theo_cap_hoc() -> list[dict]:
         SELECT
             education_level,
             COUNT(*) AS so_chuong_trinh,
-            ROUND(AVG(price_per_student), 2) AS gia_trung_binh,
+            ROUND(AVG(base_cost_per_student), 2) AS gia_trung_binh,
             ROUND(AVG(capacity), 1) AS suc_chua_trung_binh
         FROM programs
         GROUP BY education_level
@@ -103,9 +103,9 @@ def thong_ke_gia() -> dict:
         """
         SELECT
             COUNT(*) AS total_programs,
-            ROUND(MIN(price_per_student), 2) AS min_price,
-            ROUND(MAX(price_per_student), 2) AS max_price,
-            ROUND(AVG(price_per_student), 2) AS avg_price,
+            ROUND(MIN(base_cost_per_student), 2) AS min_price,
+            ROUND(MAX(base_cost_per_student), 2) AS max_price,
+            ROUND(AVG(base_cost_per_student), 2) AS avg_price,
             ROUND(AVG(capacity), 1) AS avg_capacity
         FROM programs
         """

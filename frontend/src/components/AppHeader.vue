@@ -37,7 +37,7 @@ import { APP_CONFIG } from "../config";
                 </RouterLink>
 
                 <a
-                    href="http://127.0.0.1:8000/nha-truong/dang-ky-theo-lop"
+                    :href="`${APP_CONFIG.backendUrl}/nha-truong/dang-ky-theo-lop`"
                 >
                     Đăng ký theo lớp
                 </a>

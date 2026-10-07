@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasColumn('class_registrations', 'student_count')) {
+            return;
+        }
+
         Schema::table('class_registrations', function (Blueprint $table) {
             $table->unsignedSmallInteger('student_count')
                 ->default(0)

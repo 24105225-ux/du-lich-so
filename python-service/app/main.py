@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 
+from dotenv import load_dotenv
 from fastapi import (
     FastAPI,
     Header,
@@ -14,6 +16,7 @@ from fastapi import (
 from . import analytics
 from . import recommender
 
+load_dotenv(Path(__file__).resolve().parents[2] / "backend" / ".env")
 
 app = FastAPI(
     title="DT-17 Python Data Service",

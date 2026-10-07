@@ -23,10 +23,7 @@
         )
     </title>
 
-    @vite([
-        'resources/css/app.css',
-        'resources/js/app.js'
-    ])
+    <link rel="stylesheet" href="{{ asset('assets/app.css') }}">
 </head>
 
 <body>
@@ -70,5 +67,6 @@
     </main>
 
     <x-site-footer />
+    <script type="module" src="{{ asset('assets/app.js') }}"></script>
 </body>
 </html>

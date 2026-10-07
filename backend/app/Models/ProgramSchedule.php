@@ -9,14 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProgramSchedule extends Model
 {
+    public const UPDATED_AT = null;
+
     protected $fillable = [
-        'program_id',
-        'trip_date',
-        'start_time',
-        'end_time',
-        'capacity',
-        'cost_override',
-        'status',
+        'program_id', 'trip_date', 'start_time', 'end_time',
+        'capacity', 'cost_override', 'status',
     ];
 
     protected $casts = [
@@ -26,36 +23,14 @@ class ProgramSchedule extends Model
     ];
 
     public function program(): BelongsTo
-    {
-        return $this->belongsTo(Program::class);
-    }
+    { return $this->belongsTo(Program::class); }
 
     public function stops(): HasMany
-    {
-        return $this->hasMany(
-            ScheduleStop::class,
-            'schedule_id',
-            'id'
-        )
-            ->orderBy('seq_no');
-    }
+    { return $this->hasMany(ScheduleStop::class, 'schedule_id')->orderBy('seq_no'); }
 
     public function registrations(): HasMany
-    {
-        return $this->hasMany(
-            ClassRegistration::class,
-            'schedule_id',
-            'id'
-        );
-    }
+    { return $this->hasMany(ClassRegistration::class, 'schedule_id'); }
 
     public function safetyProfile(): HasOne
-    {
-        return $this->hasOne(
-            SafetyProfile::class,
-            'schedule_id',
-            'id'
-        );
-    }
+    { return $this->hasOne(SafetyProfile::class, 'schedule_id'); }
 }
-

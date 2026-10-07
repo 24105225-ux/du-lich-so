@@ -10,16 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Program extends Model
 {
+    public const UPDATED_AT = null;
+
     protected $fillable = [
-        'organizer_id',
-        'code',
-        'name',
-        'education_level',
-        'base_cost_per_student',
-        'duration_days',
-        'capacity',
-        'status',
-        'description',
+        'organizer_id', 'code', 'name', 'education_level',
+        'base_cost_per_student', 'duration_days', 'capacity',
+        'status', 'description',
     ];
 
     protected $casts = [
@@ -42,18 +38,17 @@ class Program extends Model
 
     public function subjects(): BelongsToMany
     {
-        return $this->belongsToMany(
-            Subject::class,
-            'program_subjects'
-        );
+        return $this->belongsToMany(Subject::class, 'program_subjects');
     }
 
     public function requirements(): BelongsToMany
     {
-        return $this->belongsToMany(
-            EducationalRequirement::class,
-            'program_requirements'
-        );
+        return $this->belongsToMany(EducationalRequirement::class, 'program_requirements');
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ProgramReview::class);
     }
 
     public function scopePublished(Builder $query): Builder
@@ -61,44 +56,16 @@ class Program extends Model
         return $query->where('status', 'published');
     }
 
-    public function scopeFilter(
-        Builder $query,
-        array $filters
-    ): Builder {
+    public function scopeFilter(Builder $query, array $filters): Builder
+    {
         return $query
-            ->when(
-                $filters['keyword'] ?? null,
-                function (Builder $q, string $keyword) {
-                    $q->where('name', 'like', "%{$keyword}%");
-                }
-            )
-            ->when(
-                $filters['education_level'] ?? null,
-                function (Builder $q, string $level) {
-                    $q->where('education_level', $level);
-                }
-            )
-            ->when(
-                $filters['min_price'] ?? null,
-                function (Builder $q, $price) {
-                    $q->where(
-                        'base_cost_per_student',
-                        '>=',
-                        $price
-                    );
-                }
-            )
-            ->when(
-                $filters['max_price'] ?? null,
-                function (Builder $q, $price) {
-                    $q->where(
-                        'base_cost_per_student',
-                        '<=',
-                        $price
-                    );
-                }
-            );
+            ->when($filters['keyword'] ?? null, fn (Builder $q, string $keyword) =>
+                $q->where('name', 'like', "%{$keyword}%"))
+            ->when($filters['education_level'] ?? null, fn (Builder $q, string $level) =>
+                $q->where('education_level', $level))
+            ->when($filters['min_price'] ?? null, fn (Builder $q, $price) =>
+                $q->where('base_cost_per_student', '>=', $price))
+            ->when($filters['max_price'] ?? null, fn (Builder $q, $price) =>
+                $q->where('base_cost_per_student', '<=', $price));
     }
 }
-
-

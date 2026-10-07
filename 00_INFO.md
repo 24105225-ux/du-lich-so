@@ -10,10 +10,10 @@
 
 ## 2. Ngăn xếp công nghệ
 
-- Backend: PHP 8.3 + Laravel 11
-- Database: MySQL 8.0
+- Backend: PHP 8.3 + Laravel 12
+- Database: MySQL 8.x
 - Frontend: Vue 3 + Vite
-- CSS: Bootstrap 5.3 / CSS variables
+- CSS: CSS variables + responsive CSS
 - Python: Python 3.12 + pandas + scikit-learn + FastAPI
 - Web Server: Nginx 1.24
 - Container: Docker + Docker Compose
@@ -33,7 +33,7 @@
 - [ ] Kiểm tra hợp lệ ở frontend và backend
 - [ ] Biến môi trường
 - [ ] Nhật ký hệ thống
-- [ ] Sao lưu cơ sở dữ liệu
+- [ ] Sao lưu cơ sở dữ liệu (repo có công cụ backup; bản dump thực tế phải tạo khi triển khai)
 - [ ] Session và cookie
 - [ ] Phân quyền theo vai trò
 - [ ] Băm mật khẩu

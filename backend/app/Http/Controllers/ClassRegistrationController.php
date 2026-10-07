@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreClassRegistrationRequest;
 use App\Models\ClassRegistration;
 use App\Services\ClassRegistrationService;
+use App\Services\AuditLogService;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
@@ -17,7 +18,8 @@ use RuntimeException;
 class ClassRegistrationController extends Controller
 {
     public function __construct(
-        private ClassRegistrationService $registrations
+        private ClassRegistrationService $registrations,
+        private AuditLogService $auditLogs
     ) {
     }
 
@@ -80,6 +82,20 @@ class ClassRegistrationController extends Controller
                         $e->getMessage(),
                 ]);
         }
+
+        $this->auditLogs->record(
+            $request,
+            'CREATE',
+            'class_registration',
+            $registration->id,
+            null,
+            [
+                'class_id' => $registration->class_id,
+                'schedule_id' => $registration->schedule_id,
+                'student_count' => $registration->student_count,
+                'status' => $registration->status,
+            ],
+        );
 
         $token = Crypt::encryptString(
             (string) $registration->id
